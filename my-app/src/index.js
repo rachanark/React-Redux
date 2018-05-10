@@ -12,7 +12,7 @@ import thunk from 'redux-thunk';
 import App from './App'
 
 // const logger = createLogger();
-const store = createStore(
+export const store = createStore(
     allReducers,
     applyMiddleware(thunk)
 );

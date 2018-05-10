@@ -1,26 +1,41 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {selectCategory} from '../action';
+import {selectCategory,selectSubCategory} from '../action';
+import AddCategory from '../components/AddCategory'
 
 class CategoryList extends Component {
-
+ 
     showList(){
-        console.log(this.props.name);
-        return this.props.Categories.map((category)=>{
+        var style={float:'left'}
+        console.log( "his.props.Category");
+         console.log( this.props.Category);
+        return this.props.Category.map((category)=>{
             return (
-                    <li key={category.id}
-                        onClick={() => this.props.selectCategory(category.subcategory)}
+                    <li style={style} key={category.id}
+                        onClick={() => {    this.props.selectCategory(category,this.props.Track,this.props.Category);
+                                             this.props.selectSubCategory(category,this.props.Track,this.props.Category);
+                                        }
+                        }
                     >{category.name}</li>
                 );
         });
     }
 
     render() {
+         var style={
+                width:100,
+                height:100,
+                border:2,
+                float:'left'
+              };
         return (
-            <ul>
+            <div>
+            <AddCategory categoryVal={this.props.Category}/>
+            <ul style={style}>
                 {this.showList()}
             </ul>
+            </div>
         );
     }
 
@@ -28,13 +43,14 @@ class CategoryList extends Component {
 
 function mapStateToProps(state) {
     return {
-        Categories: state.categories,
-        selectedCategory:state.selectedCategory
+        Category: state.Category,
+        selectedCategory:state.selectedCategory,
+        Track:state.Track
     };
 }
 
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({selectCategory: selectCategory}, dispatch);
+    return bindActionCreators({selectCategory: selectCategory,selectSubCategory:selectSubCategory}, dispatch);
 }
 
 

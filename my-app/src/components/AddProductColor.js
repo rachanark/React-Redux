@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewCategory} from '../action';
 
-class AddCategory extends Component {
+class AddProductColor extends Component {
     constructor(props) {
     super(props);
     this.state = {value: ''};
@@ -33,16 +33,10 @@ class AddCategory extends Component {
     };
     return (
       <div>
-          <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" style={buttonStyle} value="+"  onClick={() => { 
-                                            if(this.state.value!="") {
-                                              this.setState({value:""});
-
-                                              this.props.addNewCategory(this.state.value,this.props.categoryVal,this.props.Category,this.props.Track);
-                                            }  
-                                           
-                                        }
-                        } />
+          Shelf: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
+          Quantity: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
+          Size: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
+          <input type="submit" style={buttonStyle} value="+"  />
       </div>
     );
   }
@@ -59,4 +53,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(AddCategory);
+export default connect(mapStateToProps, matchDispatchToProps)(AddProductColor);
