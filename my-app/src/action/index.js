@@ -9,7 +9,17 @@ export  const selectCategory = (category,Track,main) => {
 	        } 
 	    }
 	};
-
+export  const OnLoad = (main,track) => {
+			console.log("Action creater works");
+			console.log(main);
+	   	    return {
+	        type: 'ON_LOAD_CONSTANTS',
+	        payload:{
+	        	category:main,
+	        	Track:track
+	        } 
+	    }
+	};
 
 export  const selectSubCategory = (category,Track,main) => {
 	    return {
@@ -21,7 +31,27 @@ export  const selectSubCategory = (category,Track,main) => {
 	    }
 	        }
 	};
-
+export  const editCategory = (main,Track,value,category) => {
+	   	    return {
+	        type: 'EDIT_CATEGORY',
+	        payload:{
+	        	category:main,
+	        	Track:Track,
+	        	editCat:category,
+	        	editval:value
+	        } 
+	    }
+	};
+	export  const removeCategory = (main,category,Track) => {
+	   	    return {
+	        type: 'REMOVE_CATEGORY',
+	        payload:{
+	        	removeCat:category,
+	        	Track:Track,
+	        	category:main
+	        } 
+	    }
+	};
 export  const addNewCategory = (newCategory,categaoryValue,Category,Track) => {
 		console.log("Able to add1 ")
 		console.log(Category);

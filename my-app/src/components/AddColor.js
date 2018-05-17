@@ -17,8 +17,6 @@ class AddColor extends Component {
   }
 
   handleSubmit(event) {
-      //  addNewColor(this.state.value);
-   // alert('Successfully Added: ' + this.state.value);
       event.preventDefault();
   }
 

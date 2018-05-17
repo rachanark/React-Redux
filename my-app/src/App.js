@@ -38,7 +38,7 @@ class App extends Component {
         this.setState( this.state);
        // console.log(event);
 
-        alert("Clicked"+id);
+      //  alert("Clicked"+id);
 
   }
   
@@ -66,10 +66,7 @@ class App extends Component {
               </div>
               <div>
                     <div style={ this.state.style[0].style} ref='category'>
-                         <div style={style}>
-                          <CategoryList name="Sara" />
-                        </div>
-                        <hr />
+                      
                         <div style={s2}>
                           <ShowSubCategory style={s2} /> 
                         </div>
@@ -130,3 +127,6 @@ export default App;
 
 
         */
+           /*<div style={style}>
+                          <CategoryList name="Sara" />
+                        </div>*/

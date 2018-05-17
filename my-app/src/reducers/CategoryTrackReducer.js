@@ -27,7 +27,7 @@
     }
     if(action.payload===undefined)
    { 
-   		return [];
+   		return ['1'];
    }
 	
 	else

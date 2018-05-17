@@ -1,85 +1,107 @@
  function CategoryReducer(state = null, action){
- 	console.log("Ctae ");
- 	console.log(action.payload);
  	switch (action.type) {
+ 		case 'ON_LOAD_CONSTANTS':
+ 					return action.payload.category;
+        case 'REMOVE_CATEGORY':
+            var removeCat=action.payload.removeCat;
+            var loops=removeCat.id.split('-');//1-1-2
+           // loops.splice(0,1);
+           var obj={};
+            var mainCategory=action.payload.category;
+            var temp=mainCategory.subcategory;//l2
+           // var i=0;
+            for(var i=1;i<loops.length-1;i++){
+                            temp=temp[parseInt(loops[i])-1].subcategory;
+                        }
+            temp.splice(parseInt(loops[loops.length-1])-1,1);
+            obj=JSON.parse(JSON.stringify(mainCategory));;
+            console.log("Remove category action 00")
+            console.log(mainCategory);
+            return obj;
+
+        case 'EDIT_CATEGORY':  
+            var editCat=action.payload.editCat;
+            var editval=action.payload.editval;
+            var loops=editCat.id.split('-');
+            loops.splice(0,1);
+            var mainCategory=action.payload.category;
+            var temp=mainCategory.subcategory;
+           // var i=0;
+            for(var i=0;i<loops.length-1;i++){
+                            temp=temp[parseInt(loops[i])-1].subcategory;
+                        }
+            temp[parseInt(loops[loops.length-1])-1].name=editval;
+            console.log("Edited");
+            console.log(mainCategory);
+            return mainCategory;     
         case 'ADD_NEW_CATEGORY':
-        	var categaoryValue=action.payload.categaoryValue[0];
+        	var categaoryValue=action.payload.categaoryValue;
         	var newCategory=action.payload.newCategory;
         	var mainCategory=action.payload.category;
         	var loops=categaoryValue.id.split('-');
-        		loops.splice(loops.length-1,1);
-        	if(loops.length==0){
-        		mainCategory.subcategory.push({
-        			name:newCategory,
-        			subcategory:null
-        		});
-        	}
-        	else{
+            var obj={};
+        		//loops.splice(loops.length-1,1);
         			if(loops.length==1){
-        				mainCategory[parseInt(loops[0])-1].subcategory.push({
-        			name:newCategory,
-        			subcategory:null
+        				mainCategory.subcategory.push({
+                			name:newCategory,
+                            id:mainCategory.id+"-"+(mainCategory.subcategory.length+1),
+                			subcategory:[]
         		});
         			}
         			else{
         				var temp=mainCategory;
-		        		for(var i=0;i<loops.length;i++){
-		        			temp=temp[parseInt(loops[i])-1].subcategory;
+		        		for(var i=1;i<loops.length;i++){
+		        			temp=temp.subcategory[parseInt(loops[i])-1];
 		        		}
-		        		temp.push({
+		        		temp.subcategory.push({
 		        			name:newCategory,
-		        			subcategory:null
+                            id:temp.id+"-"+(temp.subcategory.length+1),
+		        			subcategory:[]
 		        		});
         			}
-        		
-        	}
+        	obj=JSON.parse(JSON.stringify(mainCategory));;
         	console.log("Add category action 00")
         	console.log(mainCategory);
-            return mainCategory;
+            return obj;
     }
 
     if(state==null){
-    	var r= [
-		{	name:'main',
-			id:'1',
-				subcategory:
-				[
-					{	name:'Ethnic',
-						id:'1-1',
-						subcategory:[
-							{name : 'saree',
-								id:'1-1-1',
-							subcategory:[
-									{  name:'Cotton',
-										id:'1-1-1-1',
-									   subcategory:null
-									}
-								]
-							}
-						]
-					},
-						{	name:'Western',
-						id:'1-2',
-						subcategory:[
-							{name : 'BottomWear',
-							id:'1-2-1',
-							subcategory:[
-									{  name:'Jeans',
-									id:'1-2-1-1',
-									   subcategory:null
-									}
-								]
-							}
-						]
-					}
-				]
-		}
-	];
-    	console.log("Add category action if");
-		console.log( r);
-		return r
-    }
-	
+		//return [];
+        return (
+        {   name:'main',
+            id:'1',
+                subcategory:
+                [
+                    {   name:'Ethnic',
+                        id:'1-1',
+                        subcategory:[
+                            {name : 'saree',
+                                id:'1-1-1',
+                            subcategory:[
+                                    {  name:'Cotton',
+                                        id:'1-1-1-1',
+                                       subcategory:[]
+                                    }                                ]
+                            }
+                        ]
+                    },
+                        {   name:'Western',
+                        id:'1-2',
+                        subcategory:[
+                            {name : 'BottomWear',
+                            id:'1-2-1',
+                            subcategory:[
+                                    {  name:'Jeans',
+                                    id:'1-2-1-1',
+                                       subcategory:[]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+        });
+     }
 	else{
 		console.log("Add category action elze");
 		console.log( action.payload.category);
@@ -89,5 +111,4 @@
 	
     	
 }
-
-export default CategoryReducer;
+ export default CategoryReducer;

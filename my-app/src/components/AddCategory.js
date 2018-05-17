@@ -10,6 +10,7 @@ class AddCategory extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   handleChange(event) {
@@ -28,7 +29,7 @@ class AddCategory extends Component {
       height:25
     };
     var FieldStyle={
-     width:80,
+     width:100,
      height:20
     };
     return (

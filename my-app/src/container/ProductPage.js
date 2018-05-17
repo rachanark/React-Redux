@@ -36,19 +36,19 @@ class ProductPage extends Component {
     };
         return (
             <div>
-            <div>
-               Description:
-                <input type="text" value={this.state.value} onChange={this.handleChange} />
-                <br/>
-             </div>
-             <div>
-                Color:
-                <input type="submit" style={buttonStyle} value="+" onClick={this.handleClick} />
-                <div style={this.state.colorstyle}>
-                <AddProductColor/>
-                <input type="submit" value="SAVE"  />
-                </div>
-            </div>
+	            <div>
+	               Description:
+	                <input type="text" value={this.state.value} onChange={this.handleChange} />
+	                <br/>
+	             </div>
+	             <div>
+	                Color:
+	                <input type="submit" style={buttonStyle} value="+" onClick={this.handleClick} />
+	                <div style={this.state.colorstyle}>
+	                <AddProductColor/>
+	                <input type="submit" value="SAVE"  />
+	                </div>
+	            </div>
             </div>
         );
     }

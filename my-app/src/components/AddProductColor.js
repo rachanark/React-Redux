@@ -36,7 +36,8 @@ class AddProductColor extends Component {
           Shelf: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
           Quantity: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
           Size: <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
-          <input type="submit" style={buttonStyle} value="+"  />
+          <input type="submit" style={buttonStyle} value="+"  /><br/>
+          
       </div>
     );
   }

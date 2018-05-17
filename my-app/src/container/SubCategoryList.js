@@ -2,51 +2,39 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {selectSubCategory,selectCategory} from '../action';
-import AddCategory from '../components/AddCategory'
-
+import AddCategory from '../components/AddCategory';
+import CategoryButton from '../components/CategoryButton';
 class SubCategoryList extends Component {
 
 
     showList(){
         return this.props.catval.subcategory.map((category)=>{
-            
-                    if(category.subcategory!=null){
-                          return (   <li key={category.id}
-                        onClick={  () => {    this.props.selectCategory(category,this.props.Track,this.props.Category);
-                                              this.props.selectSubCategory(category,this.props.Track,this.props.Category);
-                                        }
-
-                                }
-                    >{category.name}</li> 
+              var style={padding:1,backgroundColor:'#DCDCDC',border:1,borderStyle: 'inset'};
+                          return (   <li key={category.name}>
+                              <CategoryButton value={category}/>
+                    </li> 
                      );
-                    }
-              
-                    else{
-                       return (   <li key={category.id}
-                    >{category.name}</li>
-                    );
-                    }
                
         });
     }
 
       render() {
-
-           if (!this.props.selectedCategory) {
-            return (<div></div>);
-             }
          var style={
-                width:100,
-                height:100,
+               
                 border:2,
-                float:'left'
+                padding:0,
+                //float:'left',
+                listStyleType:'none'
               };
               var divstyle={
-                display:'inline'
+                display:'inline',
+                backgroundColor: 'pink',
+                //margin:10
+               // backgroundColor:'#f1f1f1'
               }
         return (
             <div stle={divstyle}>
-            <AddCategory categoryVal={this.props.catval.subcategory}/>
+            <AddCategory categoryVal={this.props.catval}/>
             <ul style={style}>
                 {this.showList()}
             </ul>
@@ -72,3 +60,7 @@ function matchDispatchToProps(dispatch){
 
 
 export default connect(mapStateToProps, matchDispatchToProps)(SubCategoryList);
+
+/*
+<input type="submit" style={{height:10,width:10}} value="X"/>
+*/
