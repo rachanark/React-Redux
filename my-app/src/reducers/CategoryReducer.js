@@ -1,3 +1,13 @@
+function formatCategory(category){
+    var subcat=category.subcategory;
+        for(var i=0;i<subcat.length;i++){
+            subcat[i].id=category.id+"-"+(i+1);
+            if(subcat[i].subcategory.length==0)
+                continue;
+            else
+                formatCategory(subcat[i])
+        }
+}
  function CategoryReducer(state = null, action){
  	switch (action.type) {
  		case 'ON_LOAD_CONSTANTS':
@@ -16,7 +26,8 @@
             temp.splice(parseInt(loops[loops.length-1])-1,1);
             obj=JSON.parse(JSON.stringify(mainCategory));;
             console.log("Remove category action 00")
-            console.log(mainCategory);
+            formatCategory(obj);
+            console.log(obj);
             return obj;
 
         case 'EDIT_CATEGORY':  

@@ -9,7 +9,6 @@ class ShowSubCategoryList extends Component {
 	        var Track=this.props.Track;
 	         if(Track.length>1){
 	            var loops=Track[Track.length-1].split("-");
-	          //  loops.splice(0,1);
 	            var cat=this.props.Category;
 	            var style={
 	                float:'left',

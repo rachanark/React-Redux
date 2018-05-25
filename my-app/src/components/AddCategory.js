@@ -9,18 +9,10 @@ class AddCategory extends Component {
     this.state = {value: ''};
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
-  }
-
-  handleSubmit(event) {
-    var newCat=this.state.value;
-    addNewCategory(newCat,this.props.Category);
-    event.preventDefault();
   }
 
   render() {
@@ -38,7 +30,6 @@ class AddCategory extends Component {
         <input type="submit" style={buttonStyle} value="+"  onClick={() => { 
                                             if(this.state.value!="") {
                                               this.setState({value:""});
-
                                               this.props.addNewCategory(this.state.value,this.props.categoryVal,this.props.Category,this.props.Track);
                                             }  
                                            
@@ -54,7 +45,7 @@ function matchDispatchToProps(dispatch){
 
 function mapStateToProps(state) {
     return {
-       Category: state.Category,
+        Category: state.Category,
         selectedCategory:state.selectedCategory,
         Track:state.Track
     };

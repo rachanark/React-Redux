@@ -9,20 +9,24 @@ class ImageCarousel extends Component {
     super(props);
     this.state = {selectedFile: null};
   }
-
+getCarousel(){
+  console.log("xasd");
+  console.log(this.props);
+    return this.props.selectedImages.map((file)=>{
+                          return (   <div>
+        <img src={file} />
+        <p className="legend">Legend 1</p>
+        </div>
+                     );
+               
+        });
+}
 //  <Carousel showArrows={true} onChange={onChange} onClickItem={onClickItem} onClickThumb={onClickThumb}>
   render() {
     return (
-     <Carousel autoPlay>
-    <div>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGLyPhTIMEVSJMeK9Ldudt-hPIkaFFeCvm803Bh9PwKrL0ne5NaQ" />
-      <p className="legend">Legend 1</p>
-    </div>
-    <div>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpGh08TUUyTw6_jcbm8YeWBO7e45DXefbk6J5C-827EmWUlb-Ekw" />
-      <p className="legend">Legend 2</p>
-    </div>
-  </Carousel>
+     <Carousel>
+       {this.getCarousel}
+     </Carousel>
     );
   }
 }
