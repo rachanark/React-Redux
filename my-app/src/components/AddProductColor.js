@@ -2,29 +2,35 @@ import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewCategory} from '../action';
-import UploadImage from '../components/UploadImage/UploadImage'
+import UploadImage from '../components/UploadImage/UploadImage';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 class AddProductColor extends Component {
     constructor(props) {
     super(props);
-      this.state ={ shelf:[10,12,45,67],
-                    color:['blue','green','red','pink'],
-                    shelfValue:10,
-                    colorValue:'blue',
+      this.state ={ shelf:[{label:10,value:10,id:1},{label:12,value:12,id:2},{label:45,value:45,id:3},
+      {label:67,value:67,id:4}],
+                    color:[{label:'blue',value:'blue',id:1},{label:'green',value:'green',id:2},
+                    {label:'red',value:'red',id:3},{label:'pink',value:'pink',id:4}],
+                    shelfValue:null,
+                    colorValue:null,
                     qty:'',
                     sizes:'',
                     details:[],
                     images:[],
                     init:{
-                      shelf:[10,12,45,67],
-                    color:['blue','green','red','pink'],
-                    shelfValue:10,
-                    colorValue:'blue',
-                    qty:'',
-                    sizes:'',
-                    details:[],
-                    images:[],
-                    init:{}
+                      shelf:[{label:10,value:10,id:1},{label:12,value:12,id:2},{label:45,value:45,id:3},
+                      {label:67,value:67,id:4}],
+                      color:[{label:'blue',value:'blue',id:1},{label:'green',value:'green',id:2},
+                      {label:'red',value:'red',id:3},{label:'pink',value:'pink',id:4}],
+                      shelfValue:null,
+                      colorValue:null,
+                      qty:'',
+                      sizes:'',
+                      details:[],
+                      images:[],
+                      init:{}
                     }
     };
 
@@ -39,25 +45,34 @@ class AddProductColor extends Component {
    // setImages
   }
   handleClick(event){
+    console.log(this.state);
     var x={
       color:this.state.colorValue,
       details:this.state.details,
       productImages:this.state.images
     }
+     console.log(x);
     this.state=this.state.init;
     this.state.init=this.state;
     this.setState(this.state);
     this.props.fun(x);
    // console.log(x);
   }
-  handleColorChange(event) {
-    this.state.colorValue= event.target.value;
+  handleColorChange= (selectedOption) => {
+    console.log(selectedOption);
+    this.state.colorValue= selectedOption;
     this.setState(this.state);
   }
-   handleShelfChange(event) {
+   handleShelfChange = (selectedOption) => {
+    console.log(selectedOption);
+    this.state.shelfValue=selectedOption;
+    this.setState(this.state);
+   }
+  /* handleShelfChange(event) {
+     console.log(event.target);
     this.state.shelfValue= event.target.value;
     this.setState(this.state);
-  }
+  }*/
     handleQtyChange(event) {
     this.state.qty= event.target.value;
     this.setState(this.state);
@@ -75,8 +90,8 @@ class AddProductColor extends Component {
         quantity:this.state.qty
     }
       this.state.details.push(x);
-      this.state.colorValue ='blue';
-      this.state.shelfValue=10;
+      this.state.colorValue =null;
+      this.state.shelfValue=null;
       this.state.qty='';
       this.state.sizes='';
        this.setState(this.state);
@@ -85,12 +100,11 @@ class AddProductColor extends Component {
   showDetails(){
     //console.log(this.state.details)
     let c=-1;
-   return this.state.details.map((detail)=>{
-         c++;
+   return this.state.details.map((detail, index)=>{
          console.log("c");
-         console.log(c);
-        return (<div>
-          <div style={{display:'inline'}}>Shelf:{detail.shelf}, Size:{detail.size}, Quantity:{detail.quantity}
+         console.log(index);
+        return (<div key={index}>
+          <div style={{display:'inline'}}>Shelf:{detail.shelf.id}, Size:{detail.size}, Quantity:{detail.quantity}
           </div>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
@@ -109,6 +123,16 @@ class AddProductColor extends Component {
 
        }
   }
+ /* setOptions(val){
+    if(val=="shelf")
+     return this.state.shelf.map((value)=>{
+        return <option key={value} value={value}>{value}</option>
+      });
+    if(val=="color")
+        return this.state.color.map((value)=>{
+        return <option key={value} value={value}>{value}</option>
+      });
+  }*/
   setOptions(val){
     if(val=="shelf")
      return this.state.shelf.map((value)=>{
@@ -118,7 +142,7 @@ class AddProductColor extends Component {
         return this.state.color.map((value)=>{
         return <option key={value} value={value}>{value}</option>
       });
-  }
+    }
   setImages(x){
       this.state.images.push(x);
       alert(x+"added");
@@ -131,21 +155,34 @@ class AddProductColor extends Component {
       height:25
     };
     var FieldStyle={
-     width:80,
+     width:100,
      height:20
     };
     return (
       <div>
-          ColorName:<select style={FieldStyle} value={this.state.colorValue} onChange={this.handleColorChange}>
-          {this.setOptions("color")}</select><br/>
-          Shelf:  <select value={this.state.shelfValue} style={FieldStyle} onChange={this.handleShelfChange}>
-          {this.setOptions("shelf")}</select>
-          Quantity: <input type="text" style={FieldStyle} value={this.state.qty} onChange={this.handleQtyChange} />
-          Size: <input type="text" style={FieldStyle} value={this.state.sizes} onChange={this.handleSizeChange} />
-          &nbsp;&nbsp;<button onClick={this.handleSubmit}>ADD</button>
+          <table><tbody>
+          <tr>
+          <td>ColorName</td>
+          <td style={{width:100}}>
+           <Select value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
+           options={this.state.color} />
+          </td>
+          </tr>
+          <tr>
+          <td>Shelf</td>
+          <td><Select value={this.state.shelfValue} clearable={false} 
+          onChange={this.handleShelfChange} options={this.state.shelf} /></td>
+          <td>Quantity</td>
+          <td><input type="text" style={FieldStyle} value={this.state.qty} onChange={this.handleQtyChange} /></td>
+          <td>Size</td>
+          <td><input type="text" style={FieldStyle} value={this.state.sizes} onChange={this.handleSizeChange} /></td>
+          <td><button onClick={this.handleSubmit}>ADD</button></td>
+          </tr></tbody>
+          </table>
           <div>{this.showDetails()}</div>
-          <UploadImage setImg={this.setImages} /><br/><br/>
+          <UploadImage setImg={this.setImages} img={this.state.images} /><br/><br/>
           <input type="submit" value="ADD COLOR" onClick={this.handleClick} />
+          
       </div>
     );
   }
@@ -163,3 +200,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(AddProductColor);
+
+/*<select value={this.state.shelfValue} style={FieldStyle} onChange={this.handleShelfChange}>
+          {this.setOptions("shelf")}</select>*/

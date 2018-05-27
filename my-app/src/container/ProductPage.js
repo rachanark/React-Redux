@@ -3,15 +3,36 @@ import {connect} from 'react-redux';
 import AddProductColor from '../components/AddProductColor'
 import UploadImage from '../components/UploadImage/UploadImage'
 import ImageCarousel from '../components/ImageCarousel/ImageCarousel'
+import {bindActionCreators} from 'redux';
+import {OnLoad} from '../action';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+
 
 class ProductPage extends Component {
  // let Colordiv={display:'none'};
+ listCategory(category){
+  for(var i=0;i<category.subcategory;i++){
+    this.state.categoryList.push({
+      label:category.subcategory[i].name,
+      value:category.subcategory[i].name,
+      id:category.subcategory[i].levelId,
+    });
+    if(category.subcategory[i].subcategory.length>=1){
+      this.listCategory(category.subcategory[i])
+    }
+  }
+ // this.setState(this.state);
+ }
+ getCategoryList(){
+    this.listCategory(this.props.Category)
+    return this.state.categoryList;
+ }
  constructor(props) {
     super(props);
     this.state = {value: '',colorstyle:{
     	display:'none'
-    },val:[],ProductColor:[]};
-
+    },val:[],ProductColor:[],categoryList:[]};
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleColor = this.handleColor.bind(this);
@@ -29,8 +50,10 @@ class ProductPage extends Component {
     event.preventDefault();
   }
   handleColor(x){
-    this.state.ProductColor.push(x);
-    this.setState( this.state);
+    this.state.ProductColor.push({color:this.state.colorValue,
+                                  details:this.state.details,
+                                  productImages:this.state.images});
+    this.setState(this.state);
     this.state.colorstyle={
       display:'none'
     }
@@ -74,6 +97,10 @@ class ProductPage extends Component {
        this.state.ProductColor.push(x);
        this.setState(this.state);
   }
+  componentWillMount(){
+    this.listCategory(this.props.Category)
+    this.setState(this.state);
+  }
 
     render() {
     	var buttonStyle={
@@ -84,24 +111,32 @@ class ProductPage extends Component {
      width:80,
      height:20
     };
+         
         return (
             <div>
 	            <div>
-	               Description:
-	                <input type="text" value={this.state.value} onChange={this.handleChange} />
-	                <br/>
-                Title:
-                  <input type="text" value={this.state.value} onChange={this.handleChange} />
-                  <br/>
-                Keywords:
-                  <input type="text" value={this.state.value} onChange={this.handleChange} />
-                  <br/>
+                <table><tbody>
+                <tr>
+                <td>Title </td>
+                <td><input type="text" value={this.state.value} onChange={this.handleChange} /></td>
+                <td>Category</td>
+                <td style={{width:100}}>
+                 <Select value={this.state.categoryValue} clearable={false} onChange={this.handleCategoryChange} 
+                 options={this.state.categoryList} />
+                </td>
+                </tr>
+                <tr>
+                <td>Description </td>
+                <td><input type="text" value={this.state.value} onChange={this.handleChange} /></td>
+                <td>Keywords</td>
+                <td><input type="text" value={this.state.value} onChange={this.handleChange} /></td>
+                </tr>
+                <tr>
+                <td>Color</td>
+                <td><input type="submit" style={buttonStyle} value="+" onClick={this.handleClick} /></td>
+                </tr></tbody>
+                </table>
 	             </div>
-	             <div>
-	                Color:
-	                <input type="submit" style={buttonStyle} value="+" onClick={this.handleClick} />
-	             </div>
-              <br/>
               <div>{this.showColor()}</div>
               <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
               <br/>
@@ -114,5 +149,15 @@ class ProductPage extends Component {
 
 }
 
+function mapStateToProps(state) {
+    return {
+        Category: state.Category,
+        selectedCategory:state.selectedCategory,
+        Track:state.Track
+    };
+}
 
-export default ProductPage;
+function matchDispatchToProps(dispatch){
+    return bindActionCreators({OnLoad:OnLoad}, dispatch);
+}
+export default connect(mapStateToProps, matchDispatchToProps)(ProductPage);

@@ -37,10 +37,9 @@ function formatCategory(category){
             loops.splice(0,1);
             var mainCategory=action.payload.category;
             var temp=mainCategory.subcategory;
-           // var i=0;
             for(var i=0;i<loops.length-1;i++){
-                            temp=temp[parseInt(loops[i])-1].subcategory;
-                        }
+                temp=temp[parseInt(loops[i])-1].subcategory;
+            }
             temp[parseInt(loops[loops.length-1])-1].name=editval;
             console.log("Edited");
             console.log(mainCategory);
