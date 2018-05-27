@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {selectSubCategory,selectCategory} from '../action';
+import {selectSubCategory,selectCategory,OnLoad} from '../action';
 import AddCategory from '../components/AddCategory';
 import CategoryButton from '../components/CategoryButton';
+import axios from 'axios';
+
 class SubCategoryList extends Component {
 
 
@@ -20,7 +22,6 @@ class SubCategoryList extends Component {
 
       render() {
          var style={
-               
                 border:2,
                 padding:0,
                 //float:'left',
@@ -28,18 +29,31 @@ class SubCategoryList extends Component {
               };
               var divstyle={
                 display:'inline',
-                backgroundColor: 'pink',
-                //margin:10
-               // backgroundColor:'#f1f1f1'
+                backgroundColor:'black',
               }
+              if(this.props.catval!=null){
         return (
-            <div stle={divstyle}>
+            <div style={divstyle}>
             <AddCategory categoryVal={this.props.catval}/>
             <ul style={style}>
                 {this.showList()}
             </ul>
             </div>
         );
+      }
+      else{
+          axios.get('https://acinventory-204612.appspot.com/rest/getCategoryTree').then(res =>{
+            console.log("Response");
+            console.log(res.data);
+            var x= {   name:'main',
+                        levelId:'1',
+                        subcategory:res.data 
+                    };
+           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
+         });
+        return "";
+      }
+        
     }
 
 }
@@ -50,12 +64,13 @@ function mapStateToProps(state) {
     return {
        Category: state.Category,
         selectedCategory:state.selectedCategory,
-        Track:state.Track
+        Track:state.Track,
+        MasterDataReducer:state.MasterDataReducer
     };
 }
 
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({selectSubCategory: selectSubCategory,selectCategory: selectCategory}, dispatch);
+    return bindActionCreators({selectSubCategory: selectSubCategory,selectCategory: selectCategory,OnLoad:OnLoad}, dispatch);
 }
 
 

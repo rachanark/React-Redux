@@ -24,7 +24,7 @@ class ShowSubCategoryList extends Component {
 	                    cat=cat.subcategory[parseInt(loops[count])-1];
 	                    return (
 		                 	<div  key={tempCategory.name} style={style}  >
-		                    <SubCategoryList  catval={tempCategory}/>
+		                    <SubCategoryList catval={tempCategory}/>
 		                    </div>
 	                     );
 	            }); 
@@ -32,7 +32,7 @@ class ShowSubCategoryList extends Component {
 	       else{
 	        var cat=this.props.Category;
 	        return (
-	        			<div  key={this.props.Category.name} style={{
+	        		<div style={{
 	                float:'left',
 	                padding:10,
 	                border:'1px solid black'
@@ -40,6 +40,7 @@ class ShowSubCategoryList extends Component {
 	        			<SubCategoryList style={style} catval={cat}/>
 	        			</div>
 	       			);
+	      
 	       }
 	    }
 	    render() {

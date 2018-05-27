@@ -5,7 +5,7 @@ function  AddCategoryReducer (state = null, action) {
         	var categaoryValue=action.payload.categaoryValue[0];
         	var newCategory=action.payload.newCategory;
         	var mainCategory=action.payload.category;
-        	var loops=categaoryValue.id.split('-');
+        	var loops=categaoryValue.lebelId.split('-');
         		loops.splice(loops.length-1,1);
         	if(loops.length==0){
         		mainCategory.push({

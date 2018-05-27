@@ -1,37 +1,25 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {addNewCategory} from '../action';
+import {addNewCategory,OnLoadMaster} from '../action';
 import UploadImage from '../components/UploadImage/UploadImage';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import axios from 'axios';
+
 
 class AddProductColor extends Component {
     constructor(props) {
     super(props);
-      this.state ={ shelf:[{label:10,value:10,id:1},{label:12,value:12,id:2},{label:45,value:45,id:3},
-      {label:67,value:67,id:4}],
-                    color:[{label:'blue',value:'blue',id:1},{label:'green',value:'green',id:2},
-                    {label:'red',value:'red',id:3},{label:'pink',value:'pink',id:4}],
+      this.state ={ shelf:[],
+                    upImg:1,
+                    color:[],
                     shelfValue:null,
                     colorValue:null,
                     qty:'',
                     sizes:'',
                     details:[],
-                    images:[],
-                    init:{
-                      shelf:[{label:10,value:10,id:1},{label:12,value:12,id:2},{label:45,value:45,id:3},
-                      {label:67,value:67,id:4}],
-                      color:[{label:'blue',value:'blue',id:1},{label:'green',value:'green',id:2},
-                      {label:'red',value:'red',id:3},{label:'pink',value:'pink',id:4}],
-                      shelfValue:null,
-                      colorValue:null,
-                      qty:'',
-                      sizes:'',
-                      details:[],
-                      images:[],
-                      init:{}
-                    }
+                    images:[]
     };
 
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -42,26 +30,60 @@ class AddProductColor extends Component {
     this.setImages = this.setImages.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.removeDetail=this.removeDetail.bind(this);
-   // setImages
+   
+  }
+  formOptions(){
+    if(this.props.MasterDataReducer!=null){
+      var MasterDataReducer=this.props.MasterDataReducer;
+      for(var i=0;i<MasterDataReducer.color.length;i++){
+        this.state.color.push({
+          label:MasterDataReducer.color[i].color,
+          value:MasterDataReducer.color[i].color,
+          id:MasterDataReducer.color[i].colorId
+        })
+      }
+      for(var i=0;i<MasterDataReducer.shelf.length;i++){
+         this.state.shelf.push({
+          label:MasterDataReducer.shelf[i].shelfLocation,
+          value:MasterDataReducer.shelf[i].shelfLocation,
+          id:MasterDataReducer.shelf[i].shelfId
+        })
+      }
+    }
+   
+  }
+   componentWillMount() {
+    this.formOptions();
+  }
+  setInitState(){
+     this.state.shelfValue=null,
+     this.state.colorValue=null,
+     this.state.qty='',
+     this.state.sizes='',
+     this.state.details=[],
+     this.state.images=[],
+     this.state.upImg=this.state.upImg+1;
   }
   handleClick(event){
-    console.log(this.state);
+    console.log("Add color");
+    console.log(this.state.colorValue);
     var x={
       color:this.state.colorValue,
       details:this.state.details,
       productImages:this.state.images
     }
      console.log(x);
-    this.state=this.state.init;
-    this.state.init=this.state;
+     this.setInitState();
     this.setState(this.state);
     this.props.fun(x);
    // console.log(x);
   }
   handleColorChange= (selectedOption) => {
     console.log(selectedOption);
+     console.log("selectedOption");
     this.state.colorValue= selectedOption;
     this.setState(this.state);
+    console.log(this.state.colorValue);
   }
    handleShelfChange = (selectedOption) => {
     console.log(selectedOption);
@@ -90,7 +112,6 @@ class AddProductColor extends Component {
         quantity:this.state.qty
     }
       this.state.details.push(x);
-      this.state.colorValue =null;
       this.state.shelfValue=null;
       this.state.qty='';
       this.state.sizes='';
@@ -98,19 +119,35 @@ class AddProductColor extends Component {
    // event.preventDefault();
   }
   showDetails(){
-    //console.log(this.state.details)
-    let c=-1;
    return this.state.details.map((detail, index)=>{
-         console.log("c");
-         console.log(index);
-        return (<div key={index}>
-          <div style={{display:'inline'}}>Shelf:{detail.shelf.id}, Size:{detail.size}, Quantity:{detail.quantity}
-          </div>
+          return (<tr key={index}>
+          <td>{detail.shelf.label}</td>
+          <td>{detail.quantity}</td>
+          <td>{detail.size}</td>
+          <td>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
-          </div>);
+          </td>
+          </tr>);
     });
   }
+makeDetails(){
+  if(this.state.details.length>=1)
+  return (
+   <table>
+          <tbody>
+          <tr bgcolor="blue">
+          <td style={{border: '1px solid white',color:'white'}}>Shelf</td>
+          <td style={{border: '1px solid white',color:'white'}}>Quantity</td>
+          <td style={{border: '1px solid white',color:'white'}}>Size</td>
+          </tr> 
+          {this.showDetails()}
+          </tbody>
+    </table>);
+    else
+      return "";
+}
+
   removeDetail(detail){
       var xdetail=JSON.stringify(detail);
       for(var i=0;i<this.state.details.length;i++){
@@ -123,16 +160,6 @@ class AddProductColor extends Component {
 
        }
   }
- /* setOptions(val){
-    if(val=="shelf")
-     return this.state.shelf.map((value)=>{
-        return <option key={value} value={value}>{value}</option>
-      });
-    if(val=="color")
-        return this.state.color.map((value)=>{
-        return <option key={value} value={value}>{value}</option>
-      });
-  }*/
   setOptions(val){
     if(val=="shelf")
      return this.state.shelf.map((value)=>{
@@ -148,19 +175,13 @@ class AddProductColor extends Component {
       alert(x+"added");
       this.setState(this.state); 
   }
-
+  uploadImg(){
+      return( <UploadImage setImg={this.setImages} img={this.state.upImg} />);
+  }
   render() {
-    var buttonStyle={
-      width:25,
-      height:25
-    };
-    var FieldStyle={
-     width:100,
-     height:20
-    };
-    return (
+      return (
       <div>
-          <table><tbody>
+          <table frame="border"><tbody>
           <tr>
           <td>ColorName</td>
           <td style={{width:100}}>
@@ -168,38 +189,40 @@ class AddProductColor extends Component {
            options={this.state.color} />
           </td>
           </tr>
+          <tr style={{margin:50}}>
+          {this.makeDetails()}
+          </tr>
           <tr>
-          <td>Shelf</td>
+          <td style={{float:'left'}}>Shelf</td>
           <td><Select value={this.state.shelfValue} clearable={false} 
           onChange={this.handleShelfChange} options={this.state.shelf} /></td>
           <td>Quantity</td>
-          <td><input type="text" style={FieldStyle} value={this.state.qty} onChange={this.handleQtyChange} /></td>
+          <td><input className="form-control" type="text" value={this.state.qty} onChange={this.handleQtyChange} /></td>
           <td>Size</td>
-          <td><input type="text" style={FieldStyle} value={this.state.sizes} onChange={this.handleSizeChange} /></td>
-          <td><button onClick={this.handleSubmit}>ADD</button></td>
+          <td><input className="form-control" type="text" value={this.state.sizes} onChange={this.handleSizeChange} /></td>
+          <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
           </tr></tbody>
           </table>
-          <div>{this.showDetails()}</div>
-          <UploadImage setImg={this.setImages} img={this.state.images} /><br/><br/>
-          <input type="submit" value="ADD COLOR" onClick={this.handleClick} />
+          <div style={{margin:20}}>
+          <UploadImage setImg={this.setImages} img={this.state.upImg} />
+          </div>
+          <input className="btn" style={{margin:10}} type="submit" value="ADD COLOR" onClick={this.handleClick} />
           
       </div>
     );
   }
 }
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({addNewCategory: addNewCategory}, dispatch);
+    return bindActionCreators({addNewCategory: addNewCategory,OnLoadMaster:OnLoadMaster}, dispatch);
 }
 
 function mapStateToProps(state) {
     return {
        Category: state.Category,
         selectedCategory:state.selectedCategory,
-        Track:state.Track
+        Track:state.Track,
+        MasterDataReducer:state.MasterDataReducer
     };
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(AddProductColor);
-
-/*<select value={this.state.shelfValue} style={FieldStyle} onChange={this.handleShelfChange}>
-          {this.setOptions("shelf")}</select>*/

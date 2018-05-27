@@ -4,7 +4,7 @@
         		console.log("TrackReducer");
         		console.log(action.payload);
 	        	var Track=action.payload.Track;
-	        	var selectedCategory=action.payload.subcategory.id;
+	        	var selectedCategory=action.payload.subcategory.levelId;
 	        	if(Track.length>1){
 		        	var selectedCategoryLength=selectedCategory.split("-").length;
 		        	var LastTrack=Track[Track.length-1].split("-").length;

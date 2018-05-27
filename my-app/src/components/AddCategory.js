@@ -26,11 +26,14 @@ class AddCategory extends Component {
     };
     return (
       <div>
-          <input type="text" style={FieldStyle} value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" style={buttonStyle} value="+"  onClick={() => { 
+      <div style={{ display:'inline-block',margin:10}}>
+        <input className="form-control form-control-sm " type="text" value={this.state.value} onChange={this.handleChange} />
+        </div>
+        <input className="btn" type="submit" value="+"  onClick={() => { 
                                             if(this.state.value!="") {
                                               this.setState({value:""});
-                                              this.props.addNewCategory(this.state.value,this.props.categoryVal,this.props.Category,this.props.Track);
+                                              this.props.addNewCategory(this.state.value,this.props.categoryVal,
+                                              this.props.Category,this.props.Track,this.props.MasterDataReducer);
                                             }  
                                            
                                         }
@@ -47,7 +50,8 @@ function mapStateToProps(state) {
     return {
         Category: state.Category,
         selectedCategory:state.selectedCategory,
-        Track:state.Track
+        Track:state.Track,
+        MasterDataReducer:state.MasterDataReducer
     };
 }
 

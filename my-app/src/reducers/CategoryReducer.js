@@ -1,7 +1,8 @@
+import axios from 'axios';
 function formatCategory(category){
     var subcat=category.subcategory;
         for(var i=0;i<subcat.length;i++){
-            subcat[i].id=category.id+"-"+(i+1);
+            subcat[i].levelId=category.levelId+"-"+(i+1);
             if(subcat[i].subcategory.length==0)
                 continue;
             else
@@ -14,12 +15,10 @@ function formatCategory(category){
  					return action.payload.category;
         case 'REMOVE_CATEGORY':
             var removeCat=action.payload.removeCat;
-            var loops=removeCat.id.split('-');//1-1-2
-           // loops.splice(0,1);
+            var loops=removeCat.levelId.split('-');
            var obj={};
             var mainCategory=action.payload.category;
             var temp=mainCategory.subcategory;//l2
-           // var i=0;
             for(var i=1;i<loops.length-1;i++){
                             temp=temp[parseInt(loops[i])-1].subcategory;
                         }
@@ -27,13 +26,16 @@ function formatCategory(category){
             obj=JSON.parse(JSON.stringify(mainCategory));;
             console.log("Remove category action 00")
             formatCategory(obj);
+            axios.post('https://acinventory-204612.appspot.com/rest/updateCatTree',obj).then(res =>{
+                    console.log("REmoved Successfully")
+                });
             console.log(obj);
             return obj;
 
         case 'EDIT_CATEGORY':  
             var editCat=action.payload.editCat;
             var editval=action.payload.editval;
-            var loops=editCat.id.split('-');
+            var loops=editCat.levelId.split('-');
             loops.splice(0,1);
             var mainCategory=action.payload.category;
             var temp=mainCategory.subcategory;
@@ -41,6 +43,9 @@ function formatCategory(category){
                 temp=temp[parseInt(loops[i])-1].subcategory;
             }
             temp[parseInt(loops[loops.length-1])-1].name=editval;
+            axios.post('https://acinventory-204612.appspot.com/rest/updateCat',temp[parseInt(loops[loops.length-1])-1]).then(res =>{
+                    console.log("REmoved Successfully")
+                });
             console.log("Edited");
             console.log(mainCategory);
             return mainCategory;     
@@ -48,26 +53,33 @@ function formatCategory(category){
         	var categaoryValue=action.payload.categaoryValue;
         	var newCategory=action.payload.newCategory;
         	var mainCategory=action.payload.category;
-        	var loops=categaoryValue.id.split('-');
+        	var loops=categaoryValue.levelId.split('-');
             var obj={};
-        		//loops.splice(loops.length-1,1);
         			if(loops.length==1){
-        				mainCategory.subcategory.push({
-                			name:newCategory,
-                            id:mainCategory.id+"-"+(mainCategory.subcategory.length+1),
-                			subcategory:[]
-        		});
+                        var newCat={
+                            name:newCategory,
+                            levelId:mainCategory.levelId+"-"+(mainCategory.subcategory.length+1),
+                            subcategory:[]
+                            };
+                    axios.post('https://acinventory-204612.appspot.com/rest/createCat',obj).then(res =>{
+                    console.log("REmoved Successfully")
+                });   
+        				mainCategory.subcategory.push(newCat);
         			}
         			else{
         				var temp=mainCategory;
 		        		for(var i=1;i<loops.length;i++){
 		        			temp=temp.subcategory[parseInt(loops[i])-1];
 		        		}
-		        		temp.subcategory.push({
-		        			name:newCategory,
-                            id:temp.id+"-"+(temp.subcategory.length+1),
-		        			subcategory:[]
-		        		});
+                        var newCat={
+                            name:newCategory,
+                            levelId:temp.levelId+"-"+(temp.subcategory.length+1),
+                            subcategory:[]
+                        };
+                        axios.post('https://acinventory-204612.appspot.com/rest/createCat',obj).then(res =>{
+                            console.log("REmoved Successfully")
+                        }); 
+		        		temp.subcategory.push(newCat);
         			}
         	obj=JSON.parse(JSON.stringify(mainCategory));;
         	console.log("Add category action 00")
@@ -76,8 +88,8 @@ function formatCategory(category){
     }
 
     if(state==null){
-		//return [];
-        return (
+        return null;
+        /*return (
         {   name:'main',
             id:'1',
                 subcategory:
@@ -110,7 +122,7 @@ function formatCategory(category){
                         ]
                     }
                 ]
-        });
+        });*/
      }
 	else{
 		console.log("Add category action elze");

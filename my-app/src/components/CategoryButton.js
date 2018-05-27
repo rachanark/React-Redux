@@ -24,7 +24,7 @@ class CategoryButton extends Component {
          this.setState( this.state);
          console.log("edited");
          console.log(this.state.value);
-        this.props.editCategory(this.props.Category,this.props.Track,this.state.value,this.props.value);
+        this.props.editCategory(this.props.Category,this.props.Track,this.state.value,this.props.value,this.props.MasterDataReducer);
       }
    }
    handleEdit(){
@@ -43,23 +43,38 @@ class CategoryButton extends Component {
   render() {
     var category=this.props.value;
     return (
-      <div>
+   <div>
         <div style={this.state.style.styleEdit}>
-        <input type="text" style={{width:70}} value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} />
+        <div  style={{  width:80,height:20,display:'inline-block',margin:10}}>
+        <input className="form-control form-control-sm" type="text" value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} />
+         </div>
          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
          style={{width:20,height:20}}  onClick={()=>this.handleCancel()} />
          </div>   
           <div style={this.state.style.styleSpan}>
-              <span  onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category);
-                                            this.props.selectSubCategory(category,this.props.Track,this.props.Category);
+          <table>
+          <tbody>
+          <tr>
+              <td  onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category);
+                                          //  this.props.selectSubCategory(category,this.props.Track,this.props.Category);
                                       }
                                 }>
-                    <u>{category.name}</u></span>
+                    <u>{category.name}</u>
+
+
+                </td>
+                <td>
                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
-                      style={{width:20,height:20}}  onClick={()=>this.props.removeCategory(this.props.Category,category,this.props.Track)} />
+                      style={{width:20,height:20}}  onClick={()=>this.props.removeCategory(this.props.Category,category,this.props.Track,this.props.MasterDataReducer)} />
+                </td>
+                <td>
                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRglrs6ulIyp_Qlt6Ecnf2dk-gm36hqZP_f7L1ygABEGUE1zjLqhQ" style={{width:20,height:20}}
                         onClick={()=>this.handleEdit()}
                       />
+                </td>
+          </tr>
+          </tbody>
+          </table>
             </div>
       </div>
     );
@@ -74,7 +89,8 @@ function mapStateToProps(state) {
     return {
        Category: state.Category,
         selectedCategory:state.selectedCategory,
-        Track:state.Track
+        Track:state.Track,
+        MasterDataReducer:state.MasterDataReducer
     };
 }
 
