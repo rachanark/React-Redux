@@ -1,7 +1,9 @@
-export const getMasterData="http://acinventory-204612.appspot.com/rest/getMasterData";
-export const saveMasterData="http://acinventory-204612.appspot.com/rest/saveMasterData";
-export const getCategoryTree="http://acinventory-204612.appspot.com/rest/getCategoryTree";
-export const getProduct ="http://acinventory-204612.appspot.com/rest/getProduct";
-export const updateProduct ="http://acinventory-204612.appspot.com/rest/updateProduct";
-export const saveProduct="http://acinventory-204612.appspot.com/rest/createProduct";
-export const createCategory = "http://acinventory-204612.appspot.com/rest/createCategory";
+export const GET_MASTER_DATA="http://acinventory-204612.appspot.com/rest/getMasterData";
+export const SAVE_MASTER_DATA="http://acinventory-204612.appspot.com/rest/saveMasterData";
+export const GET_CATEGORY_TREE="http://acinventory-204612.appspot.com/rest/getCategoryTree";
+export const GET_PRODUCT ="http://acinventory-204612.appspot.com/rest/getProduct";
+export const UPDATE_PRODUCT ="http://acinventory-204612.appspot.com/rest/updateProduct";
+export const SAVE_PRODUCT="http://acinventory-204612.appspot.com/rest/createProduct";
+export const CREATE_CATEGORY = "http://acinventory-204612.appspot.com/rest/createCategory";
+export const REMOVE_CATEGORY = "http://acinventory-204612.appspot.com/rest/removeCategory";//not available
+export const EDIT_CATEGORY="http://acinventory-204612.appspot.com/rest/editCategory";//not available

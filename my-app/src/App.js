@@ -1,7 +1,4 @@
 import React from "react";
-import {render} from "react-dom";
-//import {Router, Route, IndexRoute} from "react-router";
-//import browserHistory from 'history/createBrowserHistory'
 import {BrowserRouter as Router,Route} from "react-router-dom";
 
 import Root from './Root';

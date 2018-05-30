@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import AddProductColor from '../components/AddProductColor'
-import UploadImage from '../components/UploadImage/UploadImage'
-import ImageCarousel from '../components/ImageCarousel/ImageCarousel'
 import {bindActionCreators} from 'redux';
 import {OnLoad,OnLoadMaster} from '../action';
 import Select from 'react-select';
@@ -20,7 +18,7 @@ class ProductPage extends Component {
       value:category.subcategory[i].name,
       id:category.subcategory[i].levelId,
     });
-    if(category.subcategory[i].subcategory.length>=1){
+    if(category.subcategory[i].subcategory!=null && category.subcategory[i].subcategory.length>=1){
       this.listCategory(category.subcategory[i])
       }
     }
@@ -178,10 +176,6 @@ handleCategoryChange= (selectedOption) => {
       width:25,
       height:25
     };
-    var FieldStyle={
-     width:80,
-     height:20
-    };
     if(this.props.MasterDataReducer==null){
       axios.get('https://acinventory-204612.appspot.com/rest/getMasterData').then(res =>{
             console.log("Response Master");
@@ -209,11 +203,11 @@ handleCategoryChange= (selectedOption) => {
                 <td>Keywords</td>
                 <td><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></td>
                 </tr></tbody>
-                </table>
+                </table><br/><br/>
                 <table><tbody><tr bgcolor="blue">
                               <td style={{border: '1px solid white',color:'white'}}>Color</td>
                               <td style={{border: '1px solid white',color:'white'}}>Details</td>
-                              </tr>{this.showColor()}</tbody></table><br/>
+                              </tr>{this.showColor()}</tbody></table><br/><br/>
                 <span style={{margin:20}}>Color</span>
                 <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
 	             </div>

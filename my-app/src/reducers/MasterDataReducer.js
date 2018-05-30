@@ -1,16 +1,30 @@
+import axios from 'axios';
+import {SAVE_MASTER_DATA} from '../ApiConstants'
  function MasterDataReducer(state = null, action){
  	switch (action.type) {
  		case 'ON_LOAD_MASTER':
- 					return action.payload.master;
+ 					return JSON.parse(JSON.stringify(action.payload.master));
  		 case 'ADD_NEW_COLOR':
             var value=action.payload.value;
             console.log("Added color"+value);
-        	//api call here
-           return 1;
+            var obj={color:[{color:value}]}
+        	 axios.post(SAVE_MASTER_DATA,obj).then(res =>{
+                    console.log("Added Successfully");
+                    action.payload.master.color.push(res.data);
+                    var x=JSON.parse(JSON.stringify(action.payload.master));
+                    return x;
+                });
+           return action.payload.master
         case 'ADD_NEW_SHELF':
          var value=action.payload.value;
+         var obj={shelf:[{shelfLocation:value}]}
          console.log("Added Shelf"+value);
-        	//api call here
+        	axios.post(SAVE_MASTER_DATA,obj).then(res =>{
+                    console.log("Added Successfully");
+                     action.payload.master.shelf.push(res.data);
+                    var x=JSON.parse(JSON.stringify(action.payload.master));
+                    return x;
+                     });
             return 1;
 
  			}

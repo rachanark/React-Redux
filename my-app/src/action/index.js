@@ -45,37 +45,32 @@ export  const selectSubCategory = (category,Track,main,master) => {
 	    }
 	        }
 	};
-export  const editCategory = (main,Track,value,category,master) => {
+export  const editCategory = (main,Track,master) => {
 	   	    return {
 	        type: 'EDIT_CATEGORY',
 	        payload:{
 	        	category:main,
 	        	Track:Track,
-	        	editCat:category,
-	        	editval:value,
 	        	master:master
 	        } 
 	    }
 	};
-	export  const removeCategory = (main,category,Track,master) => {
+	export  const removeCategory = (main,Track,master) => {
 	   	    return {
 	        type: 'REMOVE_CATEGORY',
 	        payload:{
-	        	removeCat:category,
 	        	Track:Track,
 	        	category:main,
 	        	master:master
 	        } 
 	    }
 	};
-export  const addNewCategory = (newCategory,categaoryValue,Category,Track,master) => {
+export  const addNewCategory = (Category,Track,master) => {
 		console.log("Able to add1 ")
 		console.log(Category);
 	    return {
 	        type: 'ADD_NEW_CATEGORY',
 	        payload:{
-	        	 newCategory:newCategory,
-	        	 categaoryValue:categaoryValue,
 	        	 category:Category,
 	        	  Track:Track,
 	        	  master:master

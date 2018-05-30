@@ -16,7 +16,7 @@ class ShowSubCategoryList extends Component {
 	                border:'1px solid black'
 	              };
 	            var count=0;
-	            var tempCategory,previous;
+	            var tempCategory;
 
 	         return loops.map((loop)=>{
 	             		count++;

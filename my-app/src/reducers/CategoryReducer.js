@@ -1,4 +1,3 @@
-import axios from 'axios';
 function formatCategory(category){
     var subcat=category.subcategory;
         for(var i=0;i<subcat.length;i++){
@@ -14,7 +13,7 @@ function formatCategory(category){
  		case 'ON_LOAD_CONSTANTS':
  					return action.payload.category;
         case 'REMOVE_CATEGORY':
-            var removeCat=action.payload.removeCat;
+            /*var removeCat=action.payload.removeCat;
             var loops=removeCat.levelId.split('-');
            var obj={};
             var mainCategory=action.payload.category;
@@ -30,10 +29,11 @@ function formatCategory(category){
                     console.log("REmoved Successfully")
                 });
             console.log(obj);
-            return obj;
+            return obj;*/
+            return action.payload.category;
 
         case 'EDIT_CATEGORY':  
-            var editCat=action.payload.editCat;
+            /*var editCat=action.payload.editCat;
             var editval=action.payload.editval;
             var loops=editCat.levelId.split('-');
             loops.splice(0,1);
@@ -48,9 +48,11 @@ function formatCategory(category){
                 });
             console.log("Edited");
             console.log(mainCategory);
-            return mainCategory;     
+            return mainCategory;   */  
+            return action.payload.category;
+
         case 'ADD_NEW_CATEGORY':
-        	var categaoryValue=action.payload.categaoryValue;
+        	/*var categaoryValue=action.payload.categaoryValue;
         	var newCategory=action.payload.newCategory;
         	var mainCategory=action.payload.category;
         	var loops=categaoryValue.levelId.split('-');
@@ -80,11 +82,13 @@ function formatCategory(category){
                             console.log("REmoved Successfully")
                         }); 
 		        		temp.subcategory.push(newCat);
-        			}
-        	obj=JSON.parse(JSON.stringify(mainCategory));;
+        			}*/
+        	var obj=JSON.parse(JSON.stringify(action.payload.category));;
         	console.log("Add category action 00")
-        	console.log(mainCategory);
+        	console.log(obj);
             return obj;
+             //return action.payload.category;
+
     }
 
     if(state==null){

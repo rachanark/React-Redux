@@ -5,14 +5,14 @@ import {addNewCategory,OnLoadMaster} from '../action';
 import UploadImage from '../components/UploadImage/UploadImage';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import axios from 'axios';
+
 
 
 class AddProductColor extends Component {
     constructor(props) {
     super(props);
       this.state ={ shelf:[],
-                    upImg:1,
+                    upImg:[1],
                     color:[],
                     shelfValue:null,
                     colorValue:null,
@@ -32,6 +32,9 @@ class AddProductColor extends Component {
     this.removeDetail=this.removeDetail.bind(this);
    
   }
+  componentWillMount(){
+    this.formOptions();
+  }
   formOptions(){
     if(this.props.MasterDataReducer!=null){
       var MasterDataReducer=this.props.MasterDataReducer;
@@ -49,11 +52,14 @@ class AddProductColor extends Component {
           id:MasterDataReducer.shelf[i].shelfId
         })
       }
+      this.setState(this.state);
     }
-   
+    return 1;
   }
-   componentWillMount() {
-    this.formOptions();
+  getUploads(){
+      return this.state.upImg.map((val)=>{
+       return <UploadImage setImg={this.setImages} img={this.state.val} />
+      });
   }
   setInitState(){
      this.state.shelfValue=null,
@@ -62,7 +68,7 @@ class AddProductColor extends Component {
      this.state.sizes='',
      this.state.details=[],
      this.state.images=[],
-     this.state.upImg=this.state.upImg+1;
+     this.state.upImg=[this.state.upImg[0]+1];
   }
   handleClick(event){
     console.log("Add color");
@@ -183,7 +189,7 @@ makeDetails(){
       <div>
           <table frame="border"><tbody>
           <tr>
-          <td>ColorName</td>
+          <td key={this.formOptions}>ColorName</td>
           <td style={{width:100}}>
            <Select value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
            options={this.state.color} />
@@ -204,7 +210,7 @@ makeDetails(){
           </tr></tbody>
           </table>
           <div style={{margin:20}}>
-          <UploadImage setImg={this.setImages} img={this.state.upImg} />
+          {this.getUploads()}
           </div>
           <input className="btn" style={{margin:10}} type="submit" value="ADD COLOR" onClick={this.handleClick} />
           
@@ -218,7 +224,7 @@ function matchDispatchToProps(dispatch){
 
 function mapStateToProps(state) {
     return {
-       Category: state.Category,
+       Category:state.Category,
         selectedCategory:state.selectedCategory,
         Track:state.Track,
         MasterDataReducer:state.MasterDataReducer

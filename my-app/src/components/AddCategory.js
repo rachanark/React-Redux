@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewCategory} from '../action';
-
+import axios from 'axios';
+import {CREATE_CATEGORY} from '../ApiConstants';
 class AddCategory extends Component {
     constructor(props) {
     super(props);
@@ -15,15 +16,44 @@ class AddCategory extends Component {
     this.setState({value: event.target.value});
   }
 
+  addNewCategory(newCategory,categaoryValue,Category,Track,master){
+    var categaoryValue=categaoryValue;
+          var newCategory=newCategory;
+          var mainCategory=Category;
+          var loops=categaoryValue.levelId.split('-');
+              if(loops.length==1){
+                        var newCat={
+                            name:newCategory,
+                            levelId:mainCategory.levelId+"-"+(mainCategory.subcategory.length+1),
+                            subcategory:[]
+                            };
+                             mainCategory.subcategory.push(newCat);
+                    axios.post(CREATE_CATEGORY,newCat).then(res =>{
+                    console.log("Added Successfully");
+                    this.props.addNewCategory(JSON.stringify(JSON.parse(mainCategory)),this.props.Track,this.props.MasterDataReducer)
+                });   
+              }
+              else{
+                var temp=mainCategory;
+                for(var i=1;i<loops.length;i++){
+                  temp=temp.subcategory[parseInt(loops[i])-1];
+                }
+                        var newCat={
+                            name:newCategory,
+                            levelId:temp.levelId+"-"+(temp.subcategory.length+1),
+                            subcategory:[]
+                        };
+                        temp.subcategory.push(newCat);
+                        axios.post(CREATE_CATEGORY,newCat).then(res =>{
+                            console.log("Added Successfully");
+                             this.props.addNewCategory(mainCategory,this.props.Track,this.props.MasterDataReducer)
+                        }); 
+                
+              }
+  }
+
   render() {
-    var buttonStyle={
-      width:25,
-      height:25
-    };
-    var FieldStyle={
-     width:100,
-     height:20
-    };
+  
     return (
       <div>
       <div style={{ display:'inline-block',margin:10}}>
@@ -32,7 +62,7 @@ class AddCategory extends Component {
         <input className="btn" type="submit" value="+"  onClick={() => { 
                                             if(this.state.value!="") {
                                               this.setState({value:""});
-                                              this.props.addNewCategory(this.state.value,this.props.categoryVal,
+                                              this.addNewCategory(this.state.value,this.props.categoryVal,
                                               this.props.Category,this.props.Track,this.props.MasterDataReducer);
                                             }  
                                            

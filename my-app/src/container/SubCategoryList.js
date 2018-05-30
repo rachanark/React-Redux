@@ -11,8 +11,7 @@ class SubCategoryList extends Component {
 
     showList(){
         return this.props.catval.subcategory.map((category)=>{
-              var style={padding:1,backgroundColor:'#DCDCDC',border:1,borderStyle: 'inset'};
-                          return (   <li key={category.name}>
+                       return (   <li key={category.name}>
                               <CategoryButton value={category}/>
                     </li> 
                      );
@@ -21,17 +20,18 @@ class SubCategoryList extends Component {
     }
 
       render() {
-         var style={
+        var style={
                 border:2,
                 padding:0,
                 //float:'left',
                 listStyleType:'none'
               };
+       
               var divstyle={
                 display:'inline',
                 backgroundColor:'black',
               }
-              if(this.props.catval!=null){
+    if(this.props.catval!=null){
         return (
             <div style={divstyle}>
             <AddCategory categoryVal={this.props.catval}/>

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import ImageCarousel from '../ImageCarousel/ImageCarousel';
-import axios from 'axios';
-import { Carousel } from "react-responsive-carousel";
+
 
 class UploadImage extends Component {
     constructor(props) {
@@ -16,14 +14,14 @@ class UploadImage extends Component {
       this.state.event=event;
       this.setState(this.state);
   }
-  componentWillReceiveProps(nextProps) {
+ /* componentWillReceiveProps(nextProps) {
     if(nextProps.img%2==0){
       this.setState({selectedFiles:[],image:[],file:null,event:null});
       console.log("UploadImage");
       console.log(this.state);
     }
   
-}
+}*/
 
   uploadHandler(event) {
       let reader = new FileReader();
