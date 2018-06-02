@@ -42,7 +42,7 @@ editCategory(main,Track,value,category,master){
             temp[parseInt(loops[loops.length-1])-1].categoryName=editval;
             var x={
               name:editval,
-              categoryId:temp[parseInt(loops[loops.length-1])-1].categoryName
+              categoryId:temp[parseInt(loops[loops.length-1])-1].categoryId
             }
             axios.post(EDIT_CATEGORY,x).then(res =>{
                     console.log("REmoved Successfully");
