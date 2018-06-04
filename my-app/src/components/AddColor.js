@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewColor,OnLoadMaster} from '../action';
 import axios from 'axios';
+import {SAVE_MASTER_DATA} from '../ApiConstants'
 
 class AddColor extends Component {
     constructor(props) {
@@ -27,9 +28,19 @@ class AddColor extends Component {
         });
     }
     else
-      return "";
+      return ""; 
   }
-
+addNewColor(value,master){
+var value=value;
+var master=master;
+            console.log("Added color"+value);
+            var obj={color:[{color:value}],shelf:[]}
+           axios.post(SAVE_MASTER_DATA,obj).then(res =>{
+                    console.log("Added Successfully");
+                    master.color.push({colorId:res.data.colorId,color:value});
+                    this.props.addNewColor(this.props.Category,this.props.Track,master);
+                });
+}
   render() {
    if(this.props.MasterDataReducer!=null){
       return (
@@ -41,7 +52,7 @@ class AddColor extends Component {
           <input className="btn" type="submit" value="+" onClick={() => {  
                                           if(this.state.value!=""){
                                             this.setState({value:""});  
-                                           this.props.addNewColor(this.state.value,this.props.Track,this.props.Category,
+                                           this.addNewColor(this.state.value,
                                            this.props.MasterDataReducer);
                                           }
                                           

@@ -45,14 +45,12 @@ class ShowSubCategoryList extends Component {
 	    }
 	    render() {
 
-		        	 /* if (!this.props.selectedCategory) {
-		            return (<div></div>);
-		       		 }*/
-
 	        return (
+	       
 	            <ul style={{listStyleType: 'none'}}>
 	                {this.showDivs()}
 	            </ul>
+           
 	        );
 	    }
 }

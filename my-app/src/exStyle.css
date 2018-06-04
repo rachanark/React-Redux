@@ -1,0 +1,27 @@
+.navbar {    
+  background: #2C3E50;
+  .navbar-nav li {
+    color: #eee;
+    &:hover {
+      color: #18BC9C;
+      background-color: green;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
+    &:focus {
+      color: #18BC9C;
+      background-color: blue;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
+    &:active {
+      color: #18BC9C;
+      background-color: red;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
+  }
+}

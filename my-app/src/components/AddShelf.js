@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewShelf,OnLoadMaster} from '../action';
 import axios from 'axios';
+import {SAVE_MASTER_DATA} from '../ApiConstants'
 
 class AddShelf extends Component {
     constructor(props) {
@@ -34,12 +35,21 @@ class AddShelf extends Component {
     else
       return "";
   }
-
+addNewShelf(value,master){
+var value=value;
+var master=master;
+            console.log("Added shelf"+value);
+            var obj={shelf:[{shelfLocation:value}],color:[]}
+           axios.post(SAVE_MASTER_DATA,obj).then(res =>{
+                    console.log("Added Successfully");
+                    master.shelf.push({shelfId:res.data.shelfId,shelfLocation:value});
+                    this.props.addNewShelf(this.props.Category,this.props.Track,master);
+                });
+}
 
   render() {
     if(this.props.MasterDataReducer!=null){
     return (
-
           <div className="form-group container">
           Shelf:
           <div style={{  width:80,height:20,display:'inline-block',margin:10}}>
@@ -48,7 +58,7 @@ class AddShelf extends Component {
           <input className="btn" type="submit" value="+" onClick={() => { 
                                           if(this.state.value!=""){
                                              this.setState({value:""});
-                                             this.props.addNewShelf(this.state.value,this.props.Track,this.props.Category,
+                                             this.addNewShelf(this.state.value,
                                              this.props.MasterDataReducer);
                                           }
                                          
@@ -57,7 +67,6 @@ class AddShelf extends Component {
            <br/>
           <ul>{this.showShelves()}</ul>
         </div>
-  
     );
   }
   else{

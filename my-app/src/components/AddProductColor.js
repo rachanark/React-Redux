@@ -140,12 +140,13 @@ class AddProductColor extends Component {
 makeDetails(){
   if(this.state.details.length>=1)
   return (
-   <table>
+   <table className="table table-bordered">
           <tbody>
-          <tr bgcolor="blue">
-          <td style={{border: '1px solid white',color:'white'}}>Shelf</td>
-          <td style={{border: '1px solid white',color:'white'}}>Quantity</td>
-          <td style={{border: '1px solid white',color:'white'}}>Size</td>
+          <tr >
+          <td >Shelf</td>
+          <td >Quantity</td>
+          <td >Size</td>
+          <td >Action</td>
           </tr> 
           {this.showDetails()}
           </tbody>
@@ -187,34 +188,37 @@ makeDetails(){
   render() {
       return (
       <div>
-          <table frame="border"><tbody>
-          <tr>
-          <td key={this.formOptions}>ColorName</td>
-          <td style={{width:100}}>
-           <Select value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
-           options={this.state.color} />
-          </td>
-          </tr>
-          <tr style={{margin:50}}>
-          {this.makeDetails()}
-          </tr>
-          <tr>
-          <td style={{float:'left'}}>Shelf</td>
-          <td><Select value={this.state.shelfValue} clearable={false} 
-          onChange={this.handleShelfChange} options={this.state.shelf} /></td>
-          <td>Quantity</td>
-          <td><input className="form-control" type="text" value={this.state.qty} onChange={this.handleQtyChange} /></td>
-          <td>Size</td>
-          <td><input className="form-control" type="text" value={this.state.sizes} onChange={this.handleSizeChange} /></td>
-          <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
-          </tr></tbody>
-          </table>
-          <div style={{margin:20}}>
+      <div style={{border: '1px solid grey', padding: '15px'}}>
+       <table >
+          <tbody>
+             <tr>
+                <td key={this.formOptions}>ColorName</td>
+                <td style={{width:100}}>
+                   <Select value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
+                      options={this.state.color} />
+                </td>
+             </tr>
+             <tr style={{margin:50}}>
+                {this.makeDetails()}
+             </tr>
+             <tr>
+                <td style={{float:'left'}}>Shelf</td>
+                <td><Select value={this.state.shelfValue} clearable={false} 
+                   onChange={this.handleShelfChange} options={this.state.shelf} /></td>
+                <td>Quantity</td>
+                <td><input className="form-control" type="number" value={this.state.qty} onChange={this.handleQtyChange} /></td>
+                <td>Size</td>
+                <td><input className="form-control" type="text" value={this.state.sizes} onChange={this.handleSizeChange} /></td>
+                <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
+             </tr>
+          </tbody>
+       </table>
+       <div style={{margin:20}}>
           {this.getUploads()}
-          </div>
-          <input className="btn" style={{margin:10}} type="submit" value="ADD COLOR" onClick={this.handleClick} />
-          
-      </div>
+       </div>
+       </div>
+       <input className="btn" style={{margin:10}} type="submit" value="SAVE COLOR INFO" onClick={this.handleClick} />
+    </div>
     );
   }
 }

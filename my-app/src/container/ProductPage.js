@@ -136,7 +136,7 @@ handleCategoryChange= (selectedOption) => {
                       {color.color.label}
                     </td>
                     <td>
-                    <table><tbody>
+                    <table className="table"><tbody>
                      {this.showColorDetails(color.details)}
                     </tbody></table>
                     </td>
@@ -186,6 +186,7 @@ handleCategoryChange= (selectedOption) => {
          
         return (
             <div>
+            <center>
 	            <div style={{margin:10}}>
                 <table><tbody>
                 <tr>
@@ -204,15 +205,16 @@ handleCategoryChange= (selectedOption) => {
                 <td><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></td>
                 </tr></tbody>
                 </table><br/><br/>
-                <table><tbody><tr bgcolor="blue">
-                              <td style={{border: '1px solid white',color:'white'}}>Color</td>
-                              <td style={{border: '1px solid white',color:'white'}}>Details</td>
+                <table className="table table-bordered" style={{width:'50%'}}><tbody><tr>
+                              <td>Color</td>
+                              <td >Details</td>
+                               <td >Action</td>
                               </tr>{this.showColor()}</tbody></table><br/><br/>
-                <span style={{margin:20}}>Color</span>
-                <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
+                <input className="btn" type="submit" value="Add color" onClick={this.handleClick}/>
 	             </div>
               <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
               <input className="btn" type="submit" value="SAVE PRODUCT" onClick={this.handleSaveProduct} />
+           </center>
             </div>
 
         );

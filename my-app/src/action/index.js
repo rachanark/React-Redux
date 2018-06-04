@@ -78,30 +78,28 @@ export  const addNewCategory = (Category,Track,master) => {
 	        }
 	};
 
-export  const addNewColor = (value,Track,Category,master) => {
+export  const addNewColor = (Category,Track,master) => {
 	console.log("Add color action");
 	console.log(Category);
 	    return {
 	        type: 'ADD_NEW_COLOR',
 	        payload:{
-	        	  value:value,
+	        	 category:Category,
 	        	  Track:Track,
-	        	  category:Category,
 	        	  master:master
-	   			 }
+	    }
 	        }
 	};
-export  const addNewShelf = (value,Track,Category,master) => {
+export  const addNewShelf = (Category,Track,master) => {
 	console.log("Add shelf action");
 	console.log(Category);
 	    return {
 	        type: 'ADD_NEW_SHELF',
 	        payload:{
-	        	  value:value,
+	        	 category:Category,
 	        	  Track:Track,
-	        	  category:Category,
 	        	  master:master
-	   			 }
+	    }
 	        }
 	};
 
