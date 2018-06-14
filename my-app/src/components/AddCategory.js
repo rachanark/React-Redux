@@ -21,33 +21,60 @@ class AddCategory extends Component {
           var newCategory=newCategory;
           var mainCategory=Category;
           var loops=categaoryValue.levelId.split('-');
+          var len;
+          if(mainCategory.subcategory!=null)
+            len=mainCategory.subcategory.length+1;
+          else
+            len=1;
               if(loops.length==1){
                         var newCat={
-                            name:newCategory,
-                            levelId:mainCategory.levelId+"-"+(mainCategory.subcategory.length+1),
+                            categoryName:newCategory,
+                            levelId:mainCategory.levelId+"-"+len,
                             subcategory:[]
                             };
-                             mainCategory.subcategory.push(newCat);
-                    axios.post(CREATE_CATEGORY,newCat).then(res =>{
-                    console.log("Added Successfully");
+                            var reqObj={
+                              title:newCategory,
+                              description:"",
+                              parentId:0
+                            }
+                           // mainCategory.subcategory.push(newCat);
+                    axios.post(CREATE_CATEGORY,reqObj).then(res =>{
+                    console.log(res);
+                    newCat.id=res.categoryId;
+                    mainCategory.subcategory.push(newCat);
                     this.props.addNewCategory(JSON.stringify(JSON.parse(mainCategory)),this.props.Track,this.props.MasterDataReducer)
-                });   
+                }).catch(function (error) {
+                      alert("Unable to add Category")
+                      console.log(error);
+                    });   
               }
               else{
                 var temp=mainCategory;
                 for(var i=1;i<loops.length;i++){
                   temp=temp.subcategory[parseInt(loops[i])-1];
                 }
+                   var len;
+                    if(temp.subcategory!=null)
+                      len=temp.subcategory.length+1;
+                    else
+                      len=1;
                         var newCat={
-                            name:newCategory,
-                            levelId:temp.levelId+"-"+(temp.subcategory.length+1),
+                            categoryName:newCategory,
+                            levelId:temp.levelId+"-"+len,
                             subcategory:[]
                         };
+                         var reqObj={
+                              title:newCategory,
+                              description:"",
+                              parentId:temp.categoryId
+                            }
                         temp.subcategory.push(newCat);
-                        axios.post(CREATE_CATEGORY,newCat).then(res =>{
+                        axios.post(CREATE_CATEGORY,reqObj).then(res =>{
                             console.log("Added Successfully");
                              this.props.addNewCategory(mainCategory,this.props.Track,this.props.MasterDataReducer)
-                        }); 
+                        }).catch(function (error) {
+                                console.log(error);
+                              }); 
                 
               }
   }

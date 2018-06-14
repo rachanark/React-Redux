@@ -6,18 +6,21 @@ import ShowSubCategory from './container/ShowSubCategory';
 import ProductPage from './container/ProductPage';
 import AddShelf from './components/AddShelf';
 import AddColor from './components/AddColor';
+import AddSize from './components/AddSize';
+import {Landing} from './components/Landing';
 
 class App extends React.Component {
     render() {
         return (
             <Router>
                 <div>
-                    <Route path={"/"} component={Root}/ >
-                    <Route exact path="/" component={ShowSubCategory} />
-                    <Route path={"/category"} component={ShowSubCategory} />
-                    <Route path={"/product"} component={ProductPage} />
-                    <Route path={"/shelf"} component={AddShelf} />
-                    <Route path={"/color"} component={AddColor} />
+                    <Route path={"/admin"} component={Root}/ >
+                    <Route exact path="/" component={Landing} />
+                    <Route path={"/admin/category"} component={ShowSubCategory} />
+                    <Route path={"/admin/product"} component={ProductPage} />
+                    <Route path={"/admin/shelf"} component={AddShelf} />
+                    <Route path={"/admin/color"} component={AddColor} />
+                    <Route path={"/admin/size"} component={AddSize} />
                 </div>
             </Router>
         );

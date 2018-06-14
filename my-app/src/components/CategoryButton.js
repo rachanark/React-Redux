@@ -39,15 +39,21 @@ editCategory(main,Track,value,category,master){
             for(var i=0;i<loops.length-1;i++){
                 temp=temp[parseInt(loops[i])-1].subcategory;
             }
-            temp[parseInt(loops[loops.length-1])-1].categoryName=editval;
+            
             var x={
-              name:editval,
-              categoryId:temp[parseInt(loops[loops.length-1])-1].categoryId
+              title:editval,
+              categoryId:temp[parseInt(loops[loops.length-1])-1].categoryId,
+              decription:"",
+              parentId:1
             }
             axios.post(EDIT_CATEGORY,x).then(res =>{
-                    console.log("REmoved Successfully");
-                    this.props.editCategory(mainCategory,this.props.Track,this.props.MasterDataReducer);
-                });
+                    console.log("edited Successfully");
+                    temp[parseInt(loops[loops.length-1])-1].categoryName=editval;
+                    this.props.editCategory(JSON.parse(JSON.stringify(mainCategory)),this.props.Track,this.props.MasterDataReducer);
+                }).catch(function (error) {
+                  alert("Unable to edit");
+                    console.log(error);
+                  });
 }
 
 
@@ -78,15 +84,16 @@ removeCategory(main,category,Track,master){
                   temp=temp[parseInt(loops[i])-1].subcategory;
               }
   var catId=temp[parseInt(loops[loops.length-1])-1].categoryId;
-  temp.splice(parseInt(loops[loops.length-1])-1,1);
-
-  obj=JSON.parse(JSON.stringify(mainCategory));;
-  console.log("Remove category action 00")
-  this.formatCategory(obj);
-  axios.post(REMOVE_CATEGORY,catId).then(res =>{
+  
+  axios.delete(REMOVE_CATEGORY+"/"+catId).then(res =>{
           console.log("Removed Successfully");
+           temp.splice(parseInt(loops[loops.length-1])-1,1);
+           obj=JSON.parse(JSON.stringify(mainCategory));
+          this.formatCategory(obj);
           this.props.removeCategory(obj,this.props.Track,this.props.MasterDataReducer);
-      });
+      }).catch(function (error) {
+          console.log(error);
+        });
 }
 
    handleCancel(){
@@ -109,7 +116,7 @@ removeCategory(main,category,Track,master){
           <table>
           <tbody>
           <tr>
-              <td  onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category);
+              <td style={{cursor:'pointer'}} onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category,this.props.MasterDataReducer);
             
                                       }
                                 }>

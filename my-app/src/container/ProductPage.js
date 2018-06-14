@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {OnLoad,OnLoadMaster} from '../action';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE} from '../ApiConstants';
 import axios from 'axios';
 
 
@@ -12,22 +13,28 @@ class ProductPage extends Component {
  // let Colordiv={display:'none'};
  listCategory(category){
   if(category.subcategory!=null){
+    this.state.categoryList=[];
   for(var i=0;i<category.subcategory.length;i++){
     this.state.categoryList.push({
-      label:category.subcategory[i].name,
-      value:category.subcategory[i].name,
-      id:category.subcategory[i].levelId,
+      label:category.subcategory[i].categoryName,
+      value:category.subcategory[i].categoryId,
+      id:category.subcategory[i].categoryId,
     });
     if(category.subcategory[i].subcategory!=null && category.subcategory[i].subcategory.length>=1){
       this.listCategory(category.subcategory[i])
       }
     }
   }
- // this.setState(this.state);
+  this.setState(this.state);
  }
- componentWillMount() {
+
+componentDidUpdate(prevProps,prevstates){
+  if(this.props!=prevProps)
     this.getCategoryList();
   }
+/* componentDidMount() {
+    this.getCategoryList();
+  }*/
  getCategoryList(){
   if(this.props.Category!=null){
     this.state.categoryList=[];
@@ -40,8 +47,8 @@ class ProductPage extends Component {
  constructor(props) {
     super(props);
 
-    this.state = {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,colorstyle:{
-    	display:'none'
+    this.state = {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,selectedCat:[],colorstyle:{
+      display:'none'
     },finalColor:[],ProductColor:[],categoryList:[]};
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
@@ -59,21 +66,31 @@ handleCategoryChange= (selectedOption) => {
     console.log(selectedOption);
      console.log("selectedOption");
     this.state.categoryValue= selectedOption;
+    //this.state.selectCategories.push(selectedOption.id);
     this.setState(this.state);
     console.log(this.state.categoryValue);
   }
 
   handleSaveProduct(){
+    var temp=this.state.categoryValue;
+    for(var i=0;i<temp.length;i++){
+      this.state.selectedCat.push(temp[i].id);
+    }
+
     var x={
         title:this.state.titleValue,
         description:this.state.descriptionValue,
-        categoryIds:null,
+        categoryIds:this.state.selectedCat,
         colors:this.state.finalColor
     }
     console.log("Save Product");
-    axios.post('https://acinventory-204612.appspot.com/rest/createCat',x).then(res =>{
+    axios.post(SAVE_PRODUCT,x).then(res =>{
                     console.log("Saved Successfully")
-                }); 
+                }).catch(function (error) {
+                  alert("Unable to add Product")
+    console.log(error);
+  });
+
     this.setState(this.getInitState());
     console.log(x);
   }
@@ -104,7 +121,7 @@ handleCategoryChange= (selectedOption) => {
     var dtt=[];
     for(var i=0;i<x.details.length;i++){
       dtt.push({
-        size:{"sizeId":x.details[i].size},
+        size:{"sizeId":x.details[i].size.id},
         ShelfLocation:{"shelfId":x.details[i].shelf.id},
         quantity:x.details[i].quantity
       });
@@ -124,10 +141,25 @@ handleCategoryChange= (selectedOption) => {
        return <tr>
                <td>Shelf:{val.shelf.label}</td>
                <td>Quantity:{val.quantity}</td>
-               <td>Size:{val.size}</td>
+               <td>Size:{val.size.label}</td>
               </tr>
      });
   }
+/*  showColorHeader(){
+    if(this.state.ProductColor.length>=1){
+    return(<tbody>
+            <tr>
+              <td>Color</td>
+              <td >Details</td>
+               <td >Action</td>
+            </tr>
+              {this.showColor}
+            </tbody>
+          );
+    }
+    return "";
+  }*/
+
   showColor(){
       if(this.state.ProductColor.length>=1){
         return  this.state.ProductColor.map((color)=>{
@@ -172,29 +204,45 @@ handleCategoryChange= (selectedOption) => {
        this.setState(this.state);
   }
     render() {
-    	var buttonStyle={
+      var buttonStyle={
       width:25,
       height:25
     };
     if(this.props.MasterDataReducer==null){
-      axios.get('https://acinventory-204612.appspot.com/rest/getMasterData').then(res =>{
+      axios.get(GET_MASTER_DATA).then(res =>{
             console.log("Response Master");
             console.log(res.data);
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
-         });
+         }).catch(function (error) {
+    console.log(error);
+  });
+
+    }
+     if(this.props.Category==null){
+      axios.get(GET_CATEGORY_TREE).then(res =>{
+            console.log("Response Master");
+            console.log(res.data);
+            var x= {   name:'main',
+                        levelId:'1',
+                        subcategory:res.data 
+                    };
+           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
+         }).catch(function (error) {
+    console.log(error);
+  });
     }
          
         return (
             <div>
             <center>
-	            <div style={{margin:10}}>
+              <div style={{margin:10}}>
                 <table><tbody>
                 <tr>
                 <td>Title </td>
                 <td><input className="form-control" type="text" value={this.state.titleValue} onChange={this.handleTitleChange} /></td>
                 <td>Category</td>
-                <td style={{width:100}}>
-                 <Select value={this.state.categoryValue} clearable={false} onChange={this.handleCategoryChange} 
+                <td>
+                 <Select value={this.state.categoryValue} multi={true} clearable={false} onChange={this.handleCategoryChange} 
                  options={this.state.categoryList} />
                 </td>
                 </tr>
@@ -211,7 +259,7 @@ handleCategoryChange= (selectedOption) => {
                                <td >Action</td>
                               </tr>{this.showColor()}</tbody></table><br/><br/>
                 <input className="btn" type="submit" value="Add color" onClick={this.handleClick}/>
-	             </div>
+               </div>
               <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
               <input className="btn" type="submit" value="SAVE PRODUCT" onClick={this.handleSaveProduct} />
            </center>

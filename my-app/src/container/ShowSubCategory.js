@@ -21,9 +21,10 @@ class ShowSubCategoryList extends Component {
 	         return loops.map((loop)=>{
 	             		count++;
 	             		tempCategory=cat;
+	             		if(count<loops.length)
 	                    cat=cat.subcategory[parseInt(loops[count])-1];
 	                    return (
-		                 	<div  key={tempCategory.name} style={style}  >
+		                 	<div  key={tempCategory.categoryName} style={style}  >
 		                    <SubCategoryList catval={tempCategory}/>
 		                    </div>
 	                     );

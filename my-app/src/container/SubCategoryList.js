@@ -4,12 +4,14 @@ import {connect} from 'react-redux';
 import {selectSubCategory,selectCategory,OnLoad} from '../action';
 import AddCategory from '../components/AddCategory';
 import CategoryButton from '../components/CategoryButton';
+import {GET_CATEGORY_TREE} from '../ApiConstants';
 import axios from 'axios';
 
 class SubCategoryList extends Component {
 
 
     showList(){
+      if(this.props.catval.subcategory!=null)
         return this.props.catval.subcategory.map((category)=>{
                        return (   <li key={category.name}>
                               <CategoryButton value={category}/>
@@ -17,6 +19,8 @@ class SubCategoryList extends Component {
                      );
                
         });
+        else
+          return "";
     }
 
       render() {
@@ -42,7 +46,7 @@ class SubCategoryList extends Component {
         );
       }
       else{
-          axios.get('https://acinventory-204612.appspot.com/rest/getCategoryTree').then(res =>{
+          axios.get(GET_CATEGORY_TREE).then(res =>{
             console.log("Response");
             console.log(res.data);
             var x= {   name:'main',
@@ -50,7 +54,9 @@ class SubCategoryList extends Component {
                         subcategory:res.data 
                     };
            this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
-         });
+         }).catch(function (error) {
+    console.log(error);
+  });;
         return "";
       }
         

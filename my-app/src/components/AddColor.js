@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewColor,OnLoadMaster} from '../action';
 import axios from 'axios';
-import {SAVE_MASTER_DATA} from '../ApiConstants'
+import {SAVE_MASTER_DATA,GET_MASTER_DATA} from '../ApiConstants'
 
 class AddColor extends Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class AddColor extends Component {
   showColors(){
     if(this.props.MasterDataReducer!=null){
        return this.props.MasterDataReducer.color.map((masterColor)=>{
-          return <li>{masterColor.color}</li>
+          return <tr><td>{masterColor.color}</td></tr>
         });
     }
     else
@@ -39,11 +39,14 @@ var master=master;
                     console.log("Added Successfully");
                     master.color.push({colorId:res.data.colorId,color:value});
                     this.props.addNewColor(this.props.Category,this.props.Track,master);
-                });
+                }).catch(function (error) {
+                    console.log(error);
+                  });
 }
   render() {
    if(this.props.MasterDataReducer!=null){
       return (
+        <center>
       <div className="form-group container">
           Color:
           <div style={{  width:80,height:20,display:'inline-block',margin:10}}>
@@ -59,16 +62,20 @@ var master=master;
                                         }
                         } />
           <br/>
-          <ul>{this.showColors()}</ul>
+          <h3 style={{margin:'35px 0'}}>List of existing Shelves:</h3>
+          <table className="table table-bordered" style={{width:'25%'}}><tbody>{this.showColors()}</tbody></table>
       </div>
+      </center>
     );
    }
    else{
-          axios.get('https://acinventory-204612.appspot.com/rest/getMasterData').then(res =>{
+          axios.get(GET_MASTER_DATA).then(res =>{
             console.log("Response Master");
             console.log(res.data);
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
-         });
+         }).catch(function (error) {
+              console.log(error);
+            });
         return "";
       }
     

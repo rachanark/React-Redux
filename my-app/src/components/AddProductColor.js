@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewCategory,OnLoadMaster} from '../action';
@@ -12,12 +12,13 @@ class AddProductColor extends Component {
     constructor(props) {
     super(props);
       this.state ={ shelf:[],
-                    upImg:[1],
+                    upImg:0,
                     color:[],
                     shelfValue:null,
                     colorValue:null,
+                    sizeValue:null,
                     qty:'',
-                    sizes:'',
+                    sizes:[],
                     details:[],
                     images:[]
     };
@@ -32,11 +33,14 @@ class AddProductColor extends Component {
     this.removeDetail=this.removeDetail.bind(this);
    
   }
-  componentWillMount(){
+ componentDidUpdate(prevProps,prevstates){
+  if(this.props!=prevProps)
     this.formOptions();
   }
+
   formOptions(){
     if(this.props.MasterDataReducer!=null){
+      this.state.color=[],this.state.shelf=[],this.state.sizes;
       var MasterDataReducer=this.props.MasterDataReducer;
       for(var i=0;i<MasterDataReducer.color.length;i++){
         this.state.color.push({
@@ -52,23 +56,24 @@ class AddProductColor extends Component {
           id:MasterDataReducer.shelf[i].shelfId
         })
       }
+      for(var i=0;i<MasterDataReducer.size.length;i++){
+         this.state.sizes.push({
+          label:MasterDataReducer.size[i].size,
+          value:MasterDataReducer.size[i].size,
+          id:MasterDataReducer.size[i].sizeId
+        })
+      }
       this.setState(this.state);
     }
-    return 1;
-  }
-  getUploads(){
-      return this.state.upImg.map((val)=>{
-       return <UploadImage setImg={this.setImages} img={this.state.val} />
-      });
   }
   setInitState(){
      this.state.shelfValue=null,
      this.state.colorValue=null,
      this.state.qty='',
-     this.state.sizes='',
+     this.state.sizeValue=null,
      this.state.details=[],
      this.state.images=[],
-     this.state.upImg=[this.state.upImg[0]+1];
+     this.state.upImg=this.state.upImg+1;
   }
   handleClick(event){
     console.log("Add color");
@@ -86,50 +91,47 @@ class AddProductColor extends Component {
   }
   handleColorChange= (selectedOption) => {
     console.log(selectedOption);
-     console.log("selectedOption");
+     console.log("selectedOption color");
     this.state.colorValue= selectedOption;
     this.setState(this.state);
     console.log(this.state.colorValue);
   }
    handleShelfChange = (selectedOption) => {
     console.log(selectedOption);
+    console.log("selectedOption shelf");
     this.state.shelfValue=selectedOption;
     this.setState(this.state);
    }
-  /* handleShelfChange(event) {
-     console.log(event.target);
-    this.state.shelfValue= event.target.value;
-    this.setState(this.state);
-  }*/
     handleQtyChange(event) {
     this.state.qty= event.target.value;
     this.setState(this.state);
   }
-    handleSizeChange(event) {
-    this.state.sizes= event.target.value;
+    handleSizeChange=(selectedOption) => {
+    console.log(selectedOption);
+    console.log("selectedOption size");
+    this.state.sizeValue=selectedOption;
     this.setState(this.state);
   }
 
   handleSubmit(event) {
-   // console.log(this.props);
     var x={
-        size:this.state.sizes,
+        size:this.state.sizeValue,
         shelf:this.state.shelfValue,
         quantity:this.state.qty
     }
       this.state.details.push(x);
       this.state.shelfValue=null;
       this.state.qty='';
-      this.state.sizes='';
+      this.state.sizeValue=null;
        this.setState(this.state);
-   // event.preventDefault();
+      // event.preventDefault();
   }
   showDetails(){
    return this.state.details.map((detail, index)=>{
           return (<tr key={index}>
           <td>{detail.shelf.label}</td>
           <td>{detail.quantity}</td>
-          <td>{detail.size}</td>
+          <td>{detail.size.label}</td>
           <td>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
@@ -182,9 +184,6 @@ makeDetails(){
       alert(x+"added");
       this.setState(this.state); 
   }
-  uploadImg(){
-      return( <UploadImage setImg={this.setImages} img={this.state.upImg} />);
-  }
   render() {
       return (
       <div>
@@ -193,8 +192,8 @@ makeDetails(){
           <tbody>
              <tr>
                 <td key={this.formOptions}>ColorName</td>
-                <td style={{width:100}}>
-                   <Select value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
+                <td>
+                   <Select style={{width:120}} value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
                       options={this.state.color} />
                 </td>
              </tr>
@@ -203,21 +202,23 @@ makeDetails(){
              </tr>
              <tr>
                 <td style={{float:'left'}}>Shelf</td>
-                <td><Select value={this.state.shelfValue} clearable={false} 
+                <td><Select style={{width:120}} value={this.state.shelfValue} clearable={false} 
                    onChange={this.handleShelfChange} options={this.state.shelf} /></td>
                 <td>Quantity</td>
                 <td><input className="form-control" type="number" value={this.state.qty} onChange={this.handleQtyChange} /></td>
                 <td>Size</td>
-                <td><input className="form-control" type="text" value={this.state.sizes} onChange={this.handleSizeChange} /></td>
+                <td><Select style={{width:120}} value={this.state.sizeValue} clearable={false} 
+                   onChange={this.handleSizeChange} options={this.state.sizes} /></td>
                 <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
              </tr>
           </tbody>
        </table>
        <div style={{margin:20}}>
-          {this.getUploads()}
-       </div>
+         <UploadImage setImg={this.setImages} img={this.state.upImg} />
        </div>
        <input className="btn" style={{margin:10}} type="submit" value="SAVE COLOR INFO" onClick={this.handleClick} />
+       </div>
+
     </div>
     );
   }

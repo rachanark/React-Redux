@@ -103,3 +103,16 @@ export  const addNewShelf = (Category,Track,master) => {
 	        }
 	};
 
+	export  const addNewSize = (Category,Track,master) => {
+	console.log("Add size action");
+	console.log(Category);
+	    return {
+	        type: 'ADD_NEW_SIZE',
+	        payload:{
+	        	 category:Category,
+	        	  Track:Track,
+	        	  master:master
+	    }
+	        }
+	};
+

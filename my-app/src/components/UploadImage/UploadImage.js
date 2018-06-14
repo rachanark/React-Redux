@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
-
+import ImageCarousel from '../ImageCarousel/ImageCarousel';
+import axios from 'axios';
+import {UPLOAD_IMAGE} from '../../ApiConstants';
 
 class UploadImage extends Component {
     constructor(props) {
     super(props);
-    this.state = {selectedFiles:[],image:[],file:null,event:null,flag:this.props.flag};
+    this.state = {image:[],prevImage:[],file:null,event:null};
     this.fileChangedHandler = this.fileChangedHandler.bind(this);
     this.uploadHandler = this.uploadHandler.bind(this);
   }
 
+ shouldComponentUpdate(newProps, newState) {
+       let shouldUpdate = (this.props.img !== newProps.img) || (JSON.stringify(this.state.image) !== JSON.stringify(this.state.prevImage));
+       return shouldUpdate;
+   }
+   componentWillUpdate(nextProps, nextState) {
+      console.log('Component WILL UPDATE! Upload Image');
+      if((this.props.img !== nextProps.img))
+      this.setState({image:[],prevImage:[],file:null,event:null});
+   }
+
   fileChangedHandler(event) {
       this.state.file=event.target.files[0];
       this.state.event=event;
+      event.persist();
       this.setState(this.state);
   }
- /* componentWillReceiveProps(nextProps) {
-    if(nextProps.img%2==0){
-      this.setState({selectedFiles:[],image:[],file:null,event:null});
-      console.log("UploadImage");
-      console.log(this.state);
-    }
-  
-}*/
 
   uploadHandler(event) {
       let reader = new FileReader();
@@ -29,17 +34,25 @@ class UploadImage extends Component {
       if(file){
             reader.onloadend = () => {
               console.log(reader);
+              
+             const formData = new FormData();
+            formData.append('File', file, file.name);
+            axios.get(UPLOAD_IMAGE).then(res =>{
+            alert("Successfully added image");
+            console.log(res);
+            this.state.prevImage=JSON.stringify(this.state.image);
               this.state.image.push({name:file.name,value:reader.result});
-             this.props.setImg(file.name);
-             this.setState(this.state);
+              this.setState(this.state);
+             this.props.setImg(res);
+             this.state.event.target.value=null;
+             }).catch(function (error) {
+                  console.log(error);
+                  alert("Error adding image");
+                });
+             
             }
             reader.readAsDataURL(file);
-            /*const formData = new FormData();
-            formData.append('File', file, file.name);
-            axios.get('https://acinventory-204612.appspot.com/rest/getProduct/1').then(res =>{
-            console.log("Response");
-            console.log(res);
-             });*/
+            
       }
   }
   getCarousel(){
@@ -55,10 +68,8 @@ class UploadImage extends Component {
   render() {
     return (
       <div>
-          
           <input type="file" onChange={this.fileChangedHandler} />
-         
-          <button className="btn" onClick={this.uploadHandler}>Upload</button>
+          <button onClick={this.uploadHandler}>Upload!</button>
            <div>
             {this.getCarousel()}
           </div>

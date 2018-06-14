@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+/*import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {OnLoad} from '../action'
@@ -16,4 +16,4 @@ class LoadComponent extends Component{
 function matchDispatchToProps(dispatch){
     return bindActionCreators({OnLoad: OnLoad}, dispatch);
 }
-export default connect(matchDispatchToProps)(LoadComponent);
+export default connect(matchDispatchToProps)(LoadComponent);*/

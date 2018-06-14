@@ -13,17 +13,20 @@
 		        		Track.push(selectedCategory);
 		        		console.log("TrackReducer");
 		        		console.log(Track);
-		        		return Track;
+		        		return JSON.parse(JSON.stringify(Track));  
 		        	}
 		        	else{
 		        		Track.push(selectedCategory);
 		        		console.log("TrackReducer");
 		        		console.log(Track);
-		        		return Track;
+		        		return JSON.parse(JSON.stringify(Track));  
 		        	}
 	        	}
+	        	else{
 	        	 Track.push(selectedCategory);
-			return Track;       
+	        	 return JSON.parse(JSON.stringify(Track)); 
+	        	}
+			      
     }
     if(action.payload===undefined)
    { 
