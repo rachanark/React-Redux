@@ -9,19 +9,22 @@ export const Header = (props) => {
   <div className="container-fluid">
     <ul className="nav navbar-nav">
       <li className="nav-item">
-        <Link className="nav-link" to={"/admin/category"} >category</Link>
+        <Link className="nav-link" to={"/admin/category"} >Category</Link>
       </li>
       <li className="nav-item">
         <Link className="nav-link" to={"/admin/product"}>Create product</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to={"/admin/shelf"}>shelf</Link>
+        <Link className="nav-link" to={"/admin/shelf"}>Shelf</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to={"/admin/color"}>color</Link>
+        <Link className="nav-link" to={"/admin/color"}>Color</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to={"/admin/size"}>size</Link>
+        <Link className="nav-link" to={"/admin/size"}>Size</Link>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link" to={"/admin/products"}>Products</Link>
       </li>
     </ul>
   </div>

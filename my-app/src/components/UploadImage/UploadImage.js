@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
-import axios from 'axios';
+import axios,{ post } from 'axios';
 import {UPLOAD_IMAGE} from '../../ApiConstants';
 
 class UploadImage extends Component {
@@ -34,9 +34,9 @@ class UploadImage extends Component {
       if(file){
             reader.onloadend = () => {
               console.log(reader);
-              
+          /*    
              const formData = new FormData();
-            formData.append('File', file, file.name);
+            formData.append('File', file);
             axios.get(UPLOAD_IMAGE).then(res =>{
             alert("Successfully added image");
             console.log(res);
@@ -49,11 +49,31 @@ class UploadImage extends Component {
                   console.log(error);
                   alert("Error adding image");
                 });
-             
+             */
+              const formData = new FormData();
+              formData.append('file',file)
+              const config = {
+                  headers: {
+                      'content-type': 'multipart/form-data'
+                  }
+              }
+              axios.put(UPLOAD_IMAGE, formData,config).then(res =>{
+                      alert("Successfully added image");
+                      console.log(res);
+                      this.state.prevImage=JSON.stringify(this.state.image);
+                        this.state.image.push({name:file.name,value:reader.result});
+                        this.setState(this.state);
+                       this.props.setImg(res.data.success);
+                       this.state.event.target.value=null;
+                       }).catch(function (error) {
+                            console.log(error);
+                            alert("Error adding image");
+                          });
             }
             reader.readAsDataURL(file);
             
       }
+   
   }
   getCarousel(){
     return this.state.image.map((file)=>{

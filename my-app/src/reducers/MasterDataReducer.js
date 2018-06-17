@@ -1,5 +1,3 @@
-import axios from 'axios';
-import {SAVE_MASTER_DATA} from '../ApiConstants'
  function MasterDataReducer(state = null, action){
  	switch (action.type) {
  		case 'ON_LOAD_MASTER':

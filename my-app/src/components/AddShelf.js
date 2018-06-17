@@ -67,7 +67,7 @@ var master=master;
                                         }
                         } />
            <br/>
-           <h3 style={{margin:'35px 0'}}>List of existing Shelves:</h3>
+           <h3 style={{margin:'35px 0'}}>Shelves</h3>
           <table className="table table-bordered" style={{width:'25%'}}><tbody>{this.showShelves()}</tbody></table>
         </div>
         </center>

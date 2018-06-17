@@ -106,7 +106,7 @@ removeCategory(main,category,Track,master){
     return (
    <div>
         <div style={this.state.style.styleEdit}>
-        <div  style={{  width:80,height:20,display:'inline-block',margin:10}}>
+        <div  style={{  width:80,height:20,display:'inline-block',marginBottom:'10px'}}>
         <input className="form-control form-control-sm" type="text" value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} />
          </div>
          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
@@ -116,22 +116,22 @@ removeCategory(main,category,Track,master){
           <table>
           <tbody>
           <tr>
-              <td style={{cursor:'pointer'}} onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category,this.props.MasterDataReducer);
+              <td style={{cursor:'pointer',width:'172px'}} onClick={  () => {     this.props.selectCategory(category,this.props.Track,this.props.Category,this.props.MasterDataReducer);
             
                                       }
                                 }>
-                    <u>{category.categoryName}</u>
+                    {category.categoryName}
 
 
-                </td>
-                <td>
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
-                      style={{width:20,height:20}}  onClick={()=>this.removeCategory(this.props.Category,category,this.props.Track,this.props.MasterDataReducer)} />
                 </td>
                 <td>
                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRglrs6ulIyp_Qlt6Ecnf2dk-gm36hqZP_f7L1ygABEGUE1zjLqhQ" style={{width:20,height:20}}
                         onClick={()=>this.handleEdit()}
                       />
+                </td>
+                <td>
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
+                      style={{width:20,height:20}}  onClick={()=>this.removeCategory(this.props.Category,category,this.props.Track,this.props.MasterDataReducer)} />
                 </td>
           </tr>
           </tbody>

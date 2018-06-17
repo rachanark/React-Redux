@@ -40,7 +40,7 @@ class AddCategory extends Component {
                            // mainCategory.subcategory.push(newCat);
                     axios.post(CREATE_CATEGORY,reqObj).then(res =>{
                     console.log(res);
-                    newCat.id=res.categoryId;
+                    newCat.categoryId=res.success;
                     mainCategory.subcategory.push(newCat);
                     this.props.addNewCategory(JSON.stringify(JSON.parse(mainCategory)),this.props.Track,this.props.MasterDataReducer)
                 }).catch(function (error) {
@@ -68,9 +68,12 @@ class AddCategory extends Component {
                               description:"",
                               parentId:temp.categoryId
                             }
-                        temp.subcategory.push(newCat);
+                        
                         axios.post(CREATE_CATEGORY,reqObj).then(res =>{
                             console.log("Added Successfully");
+                            console.log(res);
+                          newCat.categoryId=res.data.success;
+                          temp.subcategory.push(newCat);
                              this.props.addNewCategory(mainCategory,this.props.Track,this.props.MasterDataReducer)
                         }).catch(function (error) {
                                 console.log(error);
@@ -83,8 +86,8 @@ class AddCategory extends Component {
   
     return (
       <div>
-      <div style={{ display:'inline-block',margin:10}}>
-        <input className="form-control form-control-sm " type="text" value={this.state.value} onChange={this.handleChange} />
+      <div style={{ display:'inline-block',marginRight:10}}>
+        <input style={{height: '35px', width: '170px'}} className="form-control form-control-sm " placeholder="Enter Category" type="text" value={this.state.value} onChange={this.handleChange} />
         </div>
         <input className="btn" type="submit" value="+"  onClick={() => { 
                                             if(this.state.value!="") {

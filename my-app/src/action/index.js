@@ -1,4 +1,5 @@
-	
+/*           getProductList(res,this.props.Category,this.props.Track,this.props.MasterDataReducer);
+export const getProductList=()*/
 export  const selectCategory = (category,Track,main,master) => {
 	   	    return {
 	        type: 'USER_SELECTED_CAT',

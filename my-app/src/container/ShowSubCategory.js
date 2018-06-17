@@ -13,7 +13,9 @@ class ShowSubCategoryList extends Component {
 	            var style={
 	                float:'left',
 	                padding:10,
-	                border:'1px solid black'
+	                marginLeft:'10px',
+	                backgroundColor: '#fff',
+	                 boxShadow: '0 5px 5px 0 rgba(0,0,0,.14), 0 3px 1px -5px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)'
 	              };
 	            var count=0;
 	            var tempCategory;
@@ -25,7 +27,7 @@ class ShowSubCategoryList extends Component {
 	                    cat=cat.subcategory[parseInt(loops[count])-1];
 	                    return (
 		                 	<div  key={tempCategory.categoryName} style={style}  >
-		                    <SubCategoryList catval={tempCategory}/>
+		                    <SubCategoryList catval={tempCategory} catNum={parseInt(loops[count])-1}/>
 		                    </div>
 	                     );
 	            }); 
@@ -35,8 +37,10 @@ class ShowSubCategoryList extends Component {
 	        return (
 	        		<div style={{
 	                float:'left',
+	                marginLeft:'10px',
 	                padding:10,
-	                border:'1px solid black'
+	                backgroundColor: '#fff',
+	                boxShadow: '0 5px 5px 0 rgba(0,0,0,.14), 0 3px 1px -5px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)'
 	              }}  >
 	        			<SubCategoryList style={style} catval={cat}/>
 	        			</div>

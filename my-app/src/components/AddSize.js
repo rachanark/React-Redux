@@ -68,7 +68,7 @@ var master=master;
                                         }
                         } />
            <br/>
-          <h3 style={{margin:'35px 0'}}>List of existing Shelves:</h3>
+          <h3 style={{margin:'35px 0'}}>Sizes</h3>
           <table className="table table-bordered" style={{width:'25%'}}><tbody>{this.showSizes()}</tbody></table>
         </div>
         </center>

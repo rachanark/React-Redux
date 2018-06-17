@@ -37,10 +37,12 @@ class AddProductColor extends Component {
   if(this.props!=prevProps)
     this.formOptions();
   }
-
+componentWillMount(){
+    this.formOptions();
+  }
   formOptions(){
     if(this.props.MasterDataReducer!=null){
-      this.state.color=[],this.state.shelf=[],this.state.sizes;
+      this.state.color=[],this.state.shelf=[],this.state.sizes=[];
       var MasterDataReducer=this.props.MasterDataReducer;
       for(var i=0;i<MasterDataReducer.color.length;i++){
         this.state.color.push({
@@ -129,9 +131,9 @@ class AddProductColor extends Component {
   showDetails(){
    return this.state.details.map((detail, index)=>{
           return (<tr key={index}>
+          <td>{detail.size.label}</td>
           <td>{detail.shelf.label}</td>
           <td>{detail.quantity}</td>
-          <td>{detail.size.label}</td>
           <td>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
@@ -144,11 +146,11 @@ makeDetails(){
   return (
    <table className="table table-bordered">
           <tbody>
-          <tr >
-          <td >Shelf</td>
-          <td >Quantity</td>
-          <td >Size</td>
-          <td >Action</td>
+          <tr>
+          <td>Shelf</td>
+          <td>Quantity</td>
+          <td>Size</td>
+          <td>Action</td>
           </tr> 
           {this.showDetails()}
           </tbody>
@@ -187,36 +189,42 @@ makeDetails(){
   render() {
       return (
       <div>
-      <div style={{border: '1px solid grey', padding: '15px'}}>
-       <table >
-          <tbody>
-             <tr>
-                <td key={this.formOptions}>ColorName</td>
-                <td>
-                   <Select style={{width:120}} value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
+      <div style={{marginBottom: '15px', width: '760px', backgroundColor: '#fff',boxShadow: '0 5px 5px 0 rgba(0,0,0,.14), 0 3px 1px -5px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)', padding: '15px'}}>
+      <div>
+        <div style={{height: '50px', width: '300px'}}>
+         <span style={{float:'left',height:'35px',lineHeight:'35px',marginRight:5}}>Color :</span>
+         <Select style={{width:'120px',float:'left',height:'35px', marginLeft: '25px'}} value={this.state.colorValue} clearable={false} onChange={this.handleColorChange} 
                       options={this.state.color} />
-                </td>
-             </tr>
-             <tr style={{margin:50}}>
-                {this.makeDetails()}
-             </tr>
-             <tr>
-                <td style={{float:'left'}}>Shelf</td>
-                <td><Select style={{width:120}} value={this.state.shelfValue} clearable={false} 
-                   onChange={this.handleShelfChange} options={this.state.shelf} /></td>
-                <td>Quantity</td>
-                <td><input className="form-control" type="number" value={this.state.qty} onChange={this.handleQtyChange} /></td>
-                <td>Size</td>
-                <td><Select style={{width:120}} value={this.state.sizeValue} clearable={false} 
+        </div>
+        <div style={{float:'left'}} >
+              <UploadImage setImg={this.setImages} img={this.state.upImg} />
+               </div>
+               <div style={{ height: '25px' }}></div>
+               <div>
+                <table style={{marginTop: '20px'}} className="table table-bordered">
+                      <tbody>
+                      <tr >
+                      <td >Size</td>
+                      <td >Shelf</td>
+                      <td >Quantity</td>
+                      <td >Action</td>
+                      </tr> 
+                      {this.showDetails()
+                      }
+                        <tr>
+        <td><Select style={{width:120}} value={this.state.sizeValue} clearable={false} 
                    onChange={this.handleSizeChange} options={this.state.sizes} /></td>
-                <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
-             </tr>
-          </tbody>
-       </table>
-       <div style={{margin:20}}>
-         <UploadImage setImg={this.setImages} img={this.state.upImg} />
-       </div>
-       <input className="btn" style={{margin:10}} type="submit" value="SAVE COLOR INFO" onClick={this.handleClick} />
+                   <td><Select style={{width:120}} value={this.state.shelfValue} clearable={false} 
+                   onChange={this.handleShelfChange} options={this.state.shelf} /></td>
+                   <td><input className="form-control" type="number" value={this.state.qty} onChange={this.handleQtyChange} /></td>                          
+                       <td><button className="btn" onClick={this.handleSubmit}>ADD</button></td>
+                        </tr>
+                      </tbody>
+                </table>
+               </div>
+      </div>
+       
+       <input className="btn" style={{margin:10}} type="submit" value="Add Color" onClick={this.handleClick} />
        </div>
 
     </div>

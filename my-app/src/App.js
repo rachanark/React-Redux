@@ -4,6 +4,7 @@ import {BrowserRouter as Router,Route} from "react-router-dom";
 import Root from './Root';
 import ShowSubCategory from './container/ShowSubCategory';
 import ProductPage from './container/ProductPage';
+import ProductList from './container/ProductList';
 import AddShelf from './components/AddShelf';
 import AddColor from './components/AddColor';
 import AddSize from './components/AddSize';
@@ -21,6 +22,7 @@ class App extends React.Component {
                     <Route path={"/admin/shelf"} component={AddShelf} />
                     <Route path={"/admin/color"} component={AddColor} />
                     <Route path={"/admin/size"} component={AddSize} />
+                    <Route path={"/admin/products"} component={ProductList} />
                 </div>
             </Router>
         );

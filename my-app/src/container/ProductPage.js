@@ -10,10 +10,8 @@ import axios from 'axios';
 
 
 class ProductPage extends Component {
- // let Colordiv={display:'none'};
  listCategory(category){
   if(category.subcategory!=null){
-    this.state.categoryList=[];
   for(var i=0;i<category.subcategory.length;i++){
     this.state.categoryList.push({
       label:category.subcategory[i].categoryName,
@@ -32,18 +30,17 @@ componentDidUpdate(prevProps,prevstates){
   if(this.props!=prevProps)
     this.getCategoryList();
   }
-/* componentDidMount() {
+  componentWillMount(){
     this.getCategoryList();
-  }*/
- getCategoryList(){
-  if(this.props.Category!=null){
-    this.state.categoryList=[];
-     this.setState(this.state);
-    this.listCategory(this.props.Category);
-     this.setState(this.state);
-
   }
-     }
+ getCategoryList(){
+      if(this.props.Category!=null){
+        this.state.categoryList=[];
+        this.setState(this.state);
+        this.listCategory(this.props.Category);
+        this.setState(this.state);
+         }
+  }
  constructor(props) {
     super(props);
 
@@ -60,7 +57,7 @@ componentDidUpdate(prevProps,prevstates){
   getInitState(){
     return {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,colorstyle:{
       display:'none'
-    },finalColor:[],ProductColor:[],categoryList:[]};
+    },finalColor:[],ProductColor:[]};
   }
 handleCategoryChange= (selectedOption) => {
     console.log(selectedOption);
@@ -122,7 +119,7 @@ handleCategoryChange= (selectedOption) => {
     for(var i=0;i<x.details.length;i++){
       dtt.push({
         size:{"sizeId":x.details[i].size.id},
-        ShelfLocation:{"shelfId":x.details[i].shelf.id},
+        shelfLocation:{"shelfId":x.details[i].shelf.id},
         quantity:x.details[i].quantity
       });
     }
@@ -145,21 +142,6 @@ handleCategoryChange= (selectedOption) => {
               </tr>
      });
   }
-/*  showColorHeader(){
-    if(this.state.ProductColor.length>=1){
-    return(<tbody>
-            <tr>
-              <td>Color</td>
-              <td >Details</td>
-               <td >Action</td>
-            </tr>
-              {this.showColor}
-            </tbody>
-          );
-    }
-    return "";
-  }*/
-
   showColor(){
       if(this.state.ProductColor.length>=1){
         return  this.state.ProductColor.map((color)=>{
@@ -228,12 +210,11 @@ handleCategoryChange= (selectedOption) => {
                     };
            this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
          }).catch(function (error) {
-    console.log(error);
-  });
+        console.log(error);
+         });
     }
          
         return (
-            <div>
             <center>
               <div style={{margin:10}}>
                 <table><tbody>
@@ -253,17 +234,18 @@ handleCategoryChange= (selectedOption) => {
                 <td><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></td>
                 </tr></tbody>
                 </table><br/><br/>
+                Color <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
+                <br/><br/>
+                 <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
                 <table className="table table-bordered" style={{width:'50%'}}><tbody><tr>
                               <td>Color</td>
                               <td >Details</td>
                                <td >Action</td>
-                              </tr>{this.showColor()}</tbody></table><br/><br/>
-                <input className="btn" type="submit" value="Add color" onClick={this.handleClick}/>
+                              </tr>{this.showColor()}</tbody></table>
                </div>
-              <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
+             
               <input className="btn" type="submit" value="SAVE PRODUCT" onClick={this.handleSaveProduct} />
            </center>
-            </div>
 
         );
     }
