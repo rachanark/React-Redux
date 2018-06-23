@@ -22,7 +22,6 @@ function formLevels(json){
  	switch (action.type) {
  		case 'ON_LOAD_CONSTANTS':
                     formLevels(action.payload.category);
-                    console.log(action.payload.category);
  					return action.payload.category;
         case 'REMOVE_CATEGORY':
            
@@ -34,12 +33,8 @@ function formLevels(json){
 
         case 'ADD_NEW_CATEGORY':
         	
-        	var obj=JSON.parse(JSON.stringify(action.payload.category));;
-        	console.log("Add category action 00")
-        	console.log(obj);
+        	var obj=JSON.parse(JSON.stringify(action.payload.category));
             return obj;
-             //return action.payload.category;
-
     }
 
     if(state==null){
@@ -80,8 +75,6 @@ function formLevels(json){
         });*/
      }
 	else{
-		console.log("Add category action elze");
-		console.log( action.payload.category);
 		return action.payload.category;
 		}
 		

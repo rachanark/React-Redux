@@ -21,3 +21,6 @@ export const CREATE_CATEGORY = baseUrl + "createCategory";
 export const REMOVE_CATEGORY = baseUrl + "deleteCategory";//not available
 export const EDIT_CATEGORY = baseUrl + "updateCategory";//not available
 export const UPLOAD_IMAGE=baseUrl + "uploadImage";//not available
+export const EDIT_COLOR = baseUrl + "editColor";//not available
+export const EDIT_SHELF = baseUrl + "editShelf";//not available
+export const EDIT_SIZE = baseUrl + "editSize";//not available

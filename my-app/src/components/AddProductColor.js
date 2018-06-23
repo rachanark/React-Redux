@@ -78,29 +78,20 @@ componentWillMount(){
      this.state.upImg=this.state.upImg+1;
   }
   handleClick(event){
-    console.log("Add color");
-    console.log(this.state.colorValue);
     var x={
       color:this.state.colorValue,
       details:this.state.details,
       productImages:this.state.images
     }
-     console.log(x);
      this.setInitState();
     this.setState(this.state);
     this.props.fun(x);
-   // console.log(x);
   }
   handleColorChange= (selectedOption) => {
-    console.log(selectedOption);
-     console.log("selectedOption color");
     this.state.colorValue= selectedOption;
     this.setState(this.state);
-    console.log(this.state.colorValue);
   }
    handleShelfChange = (selectedOption) => {
-    console.log(selectedOption);
-    console.log("selectedOption shelf");
     this.state.shelfValue=selectedOption;
     this.setState(this.state);
    }
@@ -109,8 +100,6 @@ componentWillMount(){
     this.setState(this.state);
   }
     handleSizeChange=(selectedOption) => {
-    console.log(selectedOption);
-    console.log("selectedOption size");
     this.state.sizeValue=selectedOption;
     this.setState(this.state);
   }

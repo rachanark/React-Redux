@@ -12,9 +12,7 @@ export  const selectCategory = (category,Track,main,master) => {
 	    }
 	};
 export  const OnLoad = (main,track,master) => {
-			console.log("Action creater works");
-			console.log(main);
-	   	    return {
+		   	    return {
 	        type: 'ON_LOAD_CONSTANTS',
 	        payload:{
 	        	category:main,
@@ -67,9 +65,7 @@ export  const editCategory = (main,Track,master) => {
 	    }
 	};
 export  const addNewCategory = (Category,Track,master) => {
-		console.log("Able to add1 ")
-		console.log(Category);
-	    return {
+		    return {
 	        type: 'ADD_NEW_CATEGORY',
 	        payload:{
 	        	 category:Category,
@@ -80,8 +76,6 @@ export  const addNewCategory = (Category,Track,master) => {
 	};
 
 export  const addNewColor = (Category,Track,master) => {
-	console.log("Add color action");
-	console.log(Category);
 	    return {
 	        type: 'ADD_NEW_COLOR',
 	        payload:{
@@ -92,8 +86,6 @@ export  const addNewColor = (Category,Track,master) => {
 	        }
 	};
 export  const addNewShelf = (Category,Track,master) => {
-	console.log("Add shelf action");
-	console.log(Category);
 	    return {
 	        type: 'ADD_NEW_SHELF',
 	        payload:{
@@ -105,9 +97,7 @@ export  const addNewShelf = (Category,Track,master) => {
 	};
 
 	export  const addNewSize = (Category,Track,master) => {
-	console.log("Add size action");
-	console.log(Category);
-	    return {
+		    return {
 	        type: 'ADD_NEW_SIZE',
 	        payload:{
 	        	 category:Category,

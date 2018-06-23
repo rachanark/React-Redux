@@ -16,7 +16,6 @@ class UploadImage extends Component {
        return shouldUpdate;
    }
    componentWillUpdate(nextProps, nextState) {
-      console.log('Component WILL UPDATE! Upload Image');
       if((this.props.img !== nextProps.img))
       this.setState({image:[],prevImage:[],file:null,event:null});
    }
@@ -33,23 +32,6 @@ class UploadImage extends Component {
       let file = this.state.file;
       if(file){
             reader.onloadend = () => {
-              console.log(reader);
-          /*    
-             const formData = new FormData();
-            formData.append('File', file);
-            axios.get(UPLOAD_IMAGE).then(res =>{
-            alert("Successfully added image");
-            console.log(res);
-            this.state.prevImage=JSON.stringify(this.state.image);
-              this.state.image.push({name:file.name,value:reader.result});
-              this.setState(this.state);
-             this.props.setImg(res);
-             this.state.event.target.value=null;
-             }).catch(function (error) {
-                  console.log(error);
-                  alert("Error adding image");
-                });
-             */
               const formData = new FormData();
               formData.append('file',file)
               const config = {
@@ -59,12 +41,11 @@ class UploadImage extends Component {
               }
               axios.put(UPLOAD_IMAGE, formData,config).then(res =>{
                       alert("Successfully added image");
-                      console.log(res);
                       this.state.prevImage=JSON.stringify(this.state.image);
-                        this.state.image.push({name:file.name,value:reader.result});
-                        this.setState(this.state);
-                       this.props.setImg(res.data.success);
-                       this.state.event.target.value=null;
+                      this.state.image.push({name:file.name,value:reader.result});
+                      this.setState(this.state);
+                      this.props.setImg(res.data.success);
+                      this.state.event.target.value=null;
                        }).catch(function (error) {
                             console.log(error);
                             alert("Error adding image");

@@ -13,14 +13,27 @@ class ProductPage extends Component {
  listCategory(category){
   if(category.subcategory!=null){
   for(var i=0;i<category.subcategory.length;i++){
-    this.state.categoryList.push({
-      label:category.subcategory[i].categoryName,
-      value:category.subcategory[i].categoryId,
-      id:category.subcategory[i].categoryId,
+      if(category.subcategory[i].subcategory!=null && category.subcategory[i].subcategory.length>=1){
+        this.listCategory(category.subcategory[i])
+        }
+        else{
+               if(category.levelId!='1'){
+                  this.state.categoryList.push({
+                  label:category.categoryName,
+                  value:category.categoryId,
+                  id:category.categoryId,
+                });
+              }
+        }
+    }
+  }
+  else{
+    if(category.levelId!='1'){
+      this.state.categoryList.push({
+      label:category.categoryName,
+      value:category.categoryId,
+      id:category.categoryId,
     });
-    if(category.subcategory[i].subcategory!=null && category.subcategory[i].subcategory.length>=1){
-      this.listCategory(category.subcategory[i])
-      }
     }
   }
   this.setState(this.state);
@@ -60,12 +73,8 @@ componentDidUpdate(prevProps,prevstates){
     },finalColor:[],ProductColor:[]};
   }
 handleCategoryChange= (selectedOption) => {
-    console.log(selectedOption);
-     console.log("selectedOption");
     this.state.categoryValue= selectedOption;
-    //this.state.selectCategories.push(selectedOption.id);
     this.setState(this.state);
-    console.log(this.state.categoryValue);
   }
 
   handleSaveProduct(){
@@ -80,16 +89,12 @@ handleCategoryChange= (selectedOption) => {
         categoryIds:this.state.selectedCat,
         colors:this.state.finalColor
     }
-    console.log("Save Product");
-    axios.post(SAVE_PRODUCT,x).then(res =>{
-                    console.log("Saved Successfully")
-                }).catch(function (error) {
+    axios.post(SAVE_PRODUCT,x).then().catch(function (error) {
                   alert("Unable to add Product")
     console.log(error);
   });
 
     this.setState(this.getInitState());
-    console.log(x);
   }
   handleTitleChange(event) {
     this.state.titleValue=event.target.value
@@ -114,7 +119,6 @@ handleCategoryChange= (selectedOption) => {
     this.state.ProductColor.push({color:x.color,
                                   details:x.details,
                                   productImages:x.productImages});
-    console.log(this.state.ProductColor);
     var dtt=[];
     for(var i=0;i<x.details.length;i++){
       dtt.push({
@@ -130,8 +134,6 @@ handleCategoryChange= (selectedOption) => {
     this.state.colorstyle={
       display:'none'
     }
-    console.log("Color ");
-    console.log(this.state.ProductColor);
   }
   showColorDetails(x){
      return x.map((val)=>{
@@ -177,9 +179,6 @@ handleCategoryChange= (selectedOption) => {
             }
 
        }
-       console.log(this.state.ProductColor);
-       console.log(this.state.finalColor);
-       console.log("removed color");
   }
   saveColor(x){
        this.state.ProductColor.push(x);
@@ -192,8 +191,6 @@ handleCategoryChange= (selectedOption) => {
     };
     if(this.props.MasterDataReducer==null){
       axios.get(GET_MASTER_DATA).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          }).catch(function (error) {
     console.log(error);
@@ -202,8 +199,6 @@ handleCategoryChange= (selectedOption) => {
     }
      if(this.props.Category==null){
       axios.get(GET_CATEGORY_TREE).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
             var x= {   name:'main',
                         levelId:'1',
                         subcategory:res.data 
@@ -219,7 +214,7 @@ handleCategoryChange= (selectedOption) => {
               <div style={{margin:10}}>
                 <table><tbody>
                 <tr>
-                <td>Title </td>
+                <td>Product Name </td>
                 <td><input className="form-control" type="text" value={this.state.titleValue} onChange={this.handleTitleChange} /></td>
                 <td>Category</td>
                 <td>

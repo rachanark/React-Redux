@@ -24,8 +24,6 @@ class CategoryButton extends Component {
          this.state.style.styleEdit={display:'none'};
          this.state.style.styleSpan={display:'block'};
          this.setState( this.state);
-         console.log("edited");
-         console.log(this.state.value);
         this.editCategory(this.props.Category,this.props.Track,this.state.value,this.props.value,this.props.MasterDataReducer);
       }
    }
@@ -47,7 +45,6 @@ editCategory(main,Track,value,category,master){
               parentId:1
             }
             axios.post(EDIT_CATEGORY,x).then(res =>{
-                    console.log("edited Successfully");
                     temp[parseInt(loops[loops.length-1])-1].categoryName=editval;
                     this.props.editCategory(JSON.parse(JSON.stringify(mainCategory)),this.props.Track,this.props.MasterDataReducer);
                 }).catch(function (error) {
@@ -58,11 +55,9 @@ editCategory(main,Track,value,category,master){
 
 
    handleEdit(){
-    console.log("edit");
     this.state.style.styleEdit={display:'block'};
     this.state.style.styleSpan={display:'none'};
     this.setState( this.state);
-   // this.props.editCategory(this.props.Category,this.props.Track,this.state.value,this.props.value);
    }
 formatCategory(category){
     var subcat=category.subcategory;
@@ -86,7 +81,6 @@ removeCategory(main,category,Track,master){
   var catId=temp[parseInt(loops[loops.length-1])-1].categoryId;
   
   axios.delete(REMOVE_CATEGORY+"/"+catId).then(res =>{
-          console.log("Removed Successfully");
            temp.splice(parseInt(loops[loops.length-1])-1,1);
            obj=JSON.parse(JSON.stringify(mainCategory));
           this.formatCategory(obj);

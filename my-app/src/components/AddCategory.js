@@ -39,7 +39,6 @@ class AddCategory extends Component {
                             }
                            // mainCategory.subcategory.push(newCat);
                     axios.post(CREATE_CATEGORY,reqObj).then(res =>{
-                    console.log(res);
                     newCat.categoryId=res.success;
                     mainCategory.subcategory.push(newCat);
                     this.props.addNewCategory(JSON.stringify(JSON.parse(mainCategory)),this.props.Track,this.props.MasterDataReducer)
@@ -70,8 +69,6 @@ class AddCategory extends Component {
                             }
                         
                         axios.post(CREATE_CATEGORY,reqObj).then(res =>{
-                            console.log("Added Successfully");
-                            console.log(res);
                           newCat.categoryId=res.data.success;
                           temp.subcategory.push(newCat);
                              this.props.addNewCategory(mainCategory,this.props.Track,this.props.MasterDataReducer)

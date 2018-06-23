@@ -81,13 +81,10 @@ componentDidUpdate(prevProps,prevstates){
     var x= selectedOption.id;
     this.state.categoryValue=selectedOption.label;
     this.getProductByCategory(x);
-    console.log(x);
   }
 
     getProductByCategory(x){
       axios.get(GET_PRODUCT_LIST+x).then(res =>{
-            console.log("Response");
-            console.log(res);
             this.state.listProduct=res.data;
             this.setState(this.state);
           // this.props.getProductList(res,this.props.Category,this.props.Track,this.props.MasterDataReducer);
@@ -100,8 +97,6 @@ componentDidUpdate(prevProps,prevstates){
       render() {
       if(this.props.Category==null){
       axios.get(GET_CATEGORY_TREE).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
             var x= {   name:'main',
                         levelId:'1',
                         subcategory:res.data 

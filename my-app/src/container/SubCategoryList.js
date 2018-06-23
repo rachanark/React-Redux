@@ -57,8 +57,6 @@ class SubCategoryList extends Component {
       }
       else{
           axios.get(GET_CATEGORY_TREE).then(res =>{
-            console.log("Response");
-            console.log(res.data);
             var x= {   name:'main',
                         levelId:'1',
                         subcategory:res.data 
@@ -75,8 +73,6 @@ class SubCategoryList extends Component {
 }
 
 function mapStateToProps(state) {
-      console.log("Track");
-        console.log(state.Track);
     return {
        Category: state.Category,
         selectedCategory:state.selectedCategory,

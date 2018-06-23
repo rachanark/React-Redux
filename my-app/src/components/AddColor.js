@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {addNewColor,OnLoadMaster} from '../action';
 import axios from 'axios';
 import {SAVE_MASTER_DATA,GET_MASTER_DATA} from '../ApiConstants'
+import ColorButton from './ColorButton';
 
 class AddColor extends Component {
     constructor(props) {
@@ -24,7 +25,9 @@ class AddColor extends Component {
   showColors(){
     if(this.props.MasterDataReducer!=null){
        return this.props.MasterDataReducer.color.map((masterColor)=>{
-          return <tr><td>{masterColor.color}</td></tr>
+          return <tr>
+          <td><ColorButton colorval={masterColor}/></td>
+          </tr>
         });
     }
     else
@@ -33,10 +36,8 @@ class AddColor extends Component {
 addNewColor(value,master){
 var value=value;
 var master=master;
-            console.log("Added color"+value);
-            var obj={color:[{color:value}],shelf:[]}
+           var obj={color:[{color:value}],shelf:[]}
            axios.post(SAVE_MASTER_DATA,obj).then(res =>{
-                    console.log("Added Successfully");
                     master.color.push({colorId:res.data.colorId,color:value});
                     this.props.addNewColor(this.props.Category,this.props.Track,master);
                 }).catch(function (error) {
@@ -48,7 +49,7 @@ var master=master;
       return (
         <center>
       <div className="form-group container">
-          Color:
+          Colour:
           <div style={{  width:80,height:20,display:'inline-block',margin:10}}>
           <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} />
           </div>
@@ -70,9 +71,7 @@ var master=master;
    }
    else{
           axios.get(GET_MASTER_DATA).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
-           this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
+            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          }).catch(function (error) {
               console.log(error);
             });
@@ -82,7 +81,6 @@ var master=master;
   }
 }
 function mapStateToProps(state){
- // console.log(this.state);
     return {
            Track:state.Track,
            Category:state.Category,

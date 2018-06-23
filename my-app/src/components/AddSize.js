@@ -4,14 +4,12 @@ import {connect} from 'react-redux';
 import {addNewSize,OnLoadMaster} from '../action';
 import axios from 'axios';
 import {SAVE_MASTER_DATA,GET_MASTER_DATA} from '../ApiConstants';
+import SizeButton from './SizeButton';
 
 class AddSize extends Component {
     constructor(props) {
     super(props);
-    console.log("Initial state of Size")
-    console.log(this.state);
     this.state = {value: ''};
-     console.log(this.state);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -21,15 +19,13 @@ class AddSize extends Component {
   }
 
   handleSubmit(event) {
-    console.log("Adding Size"+this.state.value);
     this.props.addNewSize(this.state.value);
-   //  this.props.selectSubCategory(category,this.props.Track);
     event.preventDefault();
   }
   showSizes(){
     if(this.props.MasterDataReducer!=null){
        return this.props.MasterDataReducer.size.map((masterSize)=>{
-          return <tr><td>{masterSize.size}</td></tr>
+          return <tr><td><SizeButton sizeval={masterSize}/></td></tr>
         });
     }
     else
@@ -38,10 +34,8 @@ class AddSize extends Component {
 addNewSize(value,master){
 var value=value;
 var master=master;
-            console.log("Added size"+value);
             var obj={size:[{size:value}],color:[],shelf:[]}
            axios.post(SAVE_MASTER_DATA,obj).then(res =>{
-                    console.log("Added Successfully");
                     master.size.push({sizeId:res.data.shelfId,size:value});
                     this.props.addNewSize(this.props.Category,this.props.Track,master);
                 }).catch(function (error) {
@@ -76,8 +70,6 @@ var master=master;
   }
   else{
      axios.get(GET_MASTER_DATA).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          });
       return "";
@@ -86,7 +78,6 @@ var master=master;
 }
 //
 function mapStateToProps(state){
- // console.log(this.state);
     return {
            Track:state.Track,
            Category:state.Category,

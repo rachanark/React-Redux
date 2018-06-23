@@ -3,15 +3,13 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addNewShelf,OnLoadMaster} from '../action';
 import axios from 'axios';
-import {SAVE_MASTER_DATA,GET_MASTER_DATA} from '../ApiConstants'
+import {SAVE_MASTER_DATA,GET_MASTER_DATA} from '../ApiConstants';
+import ShelfButton from './ShelfButton';
 
 class AddShelf extends Component {
     constructor(props) {
     super(props);
-    console.log("Initial state of Shelf")
-    console.log(this.state);
     this.state = {value: ''};
-     console.log(this.state);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -21,15 +19,13 @@ class AddShelf extends Component {
   }
 
   handleSubmit(event) {
-    console.log("Adding Shelf"+this.state.value);
     this.props.addNewShelf(this.state.value);
-   //  this.props.selectSubCategory(category,this.props.Track);
     event.preventDefault();
   }
   showShelves(){
     if(this.props.MasterDataReducer!=null){
-       return this.props.MasterDataReducer.shelf.map((masterColor)=>{
-          return <tr><td>{masterColor.shelfLocation}</td></tr>
+       return this.props.MasterDataReducer.shelf.map((masterShelf)=>{
+          return <tr><td><ShelfButton shelfval={masterShelf}/></td></tr>
         });
     }
     else
@@ -38,10 +34,8 @@ class AddShelf extends Component {
 addNewShelf(value,master){
 var value=value;
 var master=master;
-            console.log("Added shelf"+value);
             var obj={shelf:[{shelfLocation:value}],color:[]}
            axios.post(SAVE_MASTER_DATA,obj).then(res =>{
-                    console.log("Added Successfully");
                     master.shelf.push({shelfId:res.data.shelfId,shelfLocation:value});
                     this.props.addNewShelf(this.props.Category,this.props.Track,master);
                 }).catch(function (error) {
@@ -75,8 +69,6 @@ var master=master;
   }
   else{
      axios.get(GET_MASTER_DATA).then(res =>{
-            console.log("Response Master");
-            console.log(res.data);
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          });
       return "";
@@ -85,7 +77,6 @@ var master=master;
 }
 //
 function mapStateToProps(state){
- // console.log(this.state);
     return {
            Track:state.Track,
            Category:state.Category,

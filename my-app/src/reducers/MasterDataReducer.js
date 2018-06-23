@@ -14,8 +14,6 @@
  	if(state==null)
  		return null;
  	else{
-		console.log("Master action elze");
-		console.log( action.payload.master);
 		return action.payload.master;
 		}
 		
