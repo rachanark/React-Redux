@@ -26,7 +26,7 @@ class UploadImage extends Component {
       event.persist();
       this.setState(this.state);
   }
-
+  
   uploadHandler(event) {
       let reader = new FileReader();
       let file = this.state.file;
@@ -44,6 +44,7 @@ class UploadImage extends Component {
                       this.state.prevImage=JSON.stringify(this.state.image);
                       this.state.image.push({name:file.name,value:reader.result});
                       this.setState(this.state);
+                      debugger;
                       this.props.setImg(res.data.success);
                       this.state.event.target.value=null;
                        }).catch(function (error) {
@@ -56,10 +57,26 @@ class UploadImage extends Component {
       }
    
   }
+  removeImages(img){
+     var xImg=JSON.stringify(img);
+      for(var i=0;i<this.state.image.length;i++){
+        var y=JSON.stringify(this.state.image[i]);
+        if(y===xImg){
+              this.state.image.splice(i,1); 
+              debugger;
+              this.props.rmImg(i);
+              this.setState(this.state);
+              break;
+            }
+
+       }
+  }
   getCarousel(){
     return this.state.image.map((file)=>{
-                          return (   <div key={file.value} style={{display:'inline'}}>
+                          return (   <div key={file.name} style={{display:'inline'}}>
                                       <img src={file.value} style={{width:50,height:50}} />
+                                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
+                      style={{width:20,height:20}}  onClick={() =>this.removeImages(file)} />
                                        </div>
                      );
                

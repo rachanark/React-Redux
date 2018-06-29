@@ -8,19 +8,19 @@ import 'react-select/dist/react-select.css';
 
 
 
-class AddProductColor extends Component {
+class ProductButton extends Component {
     constructor(props) {
     super(props);
       this.state ={ shelf:[],
                     upImg:0,
                     color:[],
                     shelfValue:null,
-                    colorValue:null,
+                    colorValue:this.props.colorVal.color,
                     sizeValue:null,
                     qty:'',
                     sizes:[],
-                    details:[],
-                    images:[]
+                    details:this.props.colorVal.details,
+                    images:this.props.colorVal.productImages
     };
 
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -29,15 +29,21 @@ class AddProductColor extends Component {
     this.handleSizeChange = this.handleSizeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this,'');
     this.setImages = this.setImages.bind(this);
-     this.removeImg = this.removeImg.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
     this.removeDetail=this.removeDetail.bind(this);
    
   }
  componentDidUpdate(prevProps,prevstates){
-  if(this.props!=prevProps)
-    this.formOptions();
-  }
+      if(this.props!=prevProps){
+          this.formOptions();
+          this.state.colorValue=this.props.colorVal.color;
+          this.state.details=this.props.colorVal.details;
+          this.state.images=this.props.colorVal.productImages;
+          this.setState(this.state);
+      }
+    
+   }
 componentWillMount(){
     this.formOptions();
   }
@@ -78,15 +84,19 @@ componentWillMount(){
      this.state.images=[],
      this.state.upImg=this.state.upImg+1;
   }
-  handleClick(event){
+  cancelEdit(){
+    this.props.cancelEdit();
+  }
+  handleUpdate(event){
     var x={
       color:this.state.colorValue,
       details:this.state.details,
       productImages:this.state.images
     }
+     this.props.editProductColor(x,this.props.value);
      this.setInitState();
     this.setState(this.state);
-    this.props.fun(x);
+   
   }
   handleColorChange= (selectedOption) => {
     this.state.colorValue= selectedOption;
@@ -105,7 +115,7 @@ componentWillMount(){
     this.setState(this.state);
   }
 
-  handleSubmit(event) {
+    handleSubmit(event) {
     var x={
         size:this.state.sizeValue,
         shelf:this.state.shelfValue,
@@ -172,17 +182,10 @@ makeDetails(){
       });
     }
   setImages(x){
-    debugger;
       this.state.images.push(x);
       alert(x+"added");
       this.setState(this.state); 
   }
-  removeImg(x){
-        debugger;
-          this.state.images.splice(x,1); 
-          this.setState(this.state);
-  }
-
   render() {
       return (
       <div>
@@ -194,7 +197,7 @@ makeDetails(){
                       options={this.state.color} />
         </div>
         <div style={{float:'left'}} >
-              <UploadImage setImg={this.setImages} rmImg={this.removeImg} img={this.state.upImg} />
+              <UploadImage setImg={this.setImages} img={this.state.upImg} />
                </div>
                <div style={{ height: '25px' }}></div>
                <div>
@@ -220,8 +223,8 @@ makeDetails(){
                 </table>
                </div>
       </div>
-       
-       <input className="btn" style={{margin:10}} type="submit" value="Add Color" onClick={this.handleClick} />
+        <input className="btn" style={{margin:10}} type="submit" value="Cancel" onClick={this.cancelEdit} />
+       <input className="btn" style={{margin:10}} type="submit" value="Update Color" onClick={this.handleUpdate} />
        </div>
 
     </div>
@@ -241,4 +244,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(AddProductColor);
+export default connect(mapStateToProps, matchDispatchToProps)(ProductButton);

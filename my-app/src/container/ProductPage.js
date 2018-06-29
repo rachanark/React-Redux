@@ -7,6 +7,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE} from '../ApiConstants';
 import axios from 'axios';
+import ProductButton from '../components/ProductButton'
 
 
 class ProductPage extends Component {
@@ -57,15 +58,45 @@ componentDidUpdate(prevProps,prevstates){
  constructor(props) {
     super(props);
 
-    this.state = {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,selectedCat:[],colorstyle:{
-      display:'none'
-    },finalColor:[],ProductColor:[],categoryList:[]};
+    this.state = {
+                    titleValue: '',
+                    descriptionValue: '',
+                    keywordValue: '',
+                    categoryValue:null,
+                    selectedCat:[],
+                    colorstyle:{
+                                  display:'none'
+                                },
+                    editStyle:{
+                      display:'none'
+                    },
+                    addStyle:{
+                      display:'block'
+                    },
+                    editIndex:0,
+                    editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
+                    finalColor:[],
+                    ProductColor:[],
+                    categoryList:[]};
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleColor = this.handleColor.bind(this);
     this.handleSaveProduct=this.handleSaveProduct.bind(this);
+    this.cncl=this.cncl.bind(this);
+    this.editProductColor=this.editProductColor.bind(this);
+  }
+
+  showEditStyle(){
+    this.state.editStyle={display:'block'};
+    this.state.addStyle={display:'none'};
+    this.setState(this.state);
+  }
+   showAddStyle(){
+    this.state.editStyle={display:'none'};
+    this.state.addStyle={display:'block'};
+    this.setState(this.state);
   }
   getInitState(){
     return {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,colorstyle:{
@@ -159,6 +190,9 @@ handleCategoryChange= (selectedOption) => {
                     <td>
                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}} onClick={() =>this.removeColor(color)} />
+                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRglrs6ulIyp_Qlt6Ecnf2dk-gm36hqZP_f7L1ygABEGUE1zjLqhQ" style={{width:20,height:20}}
+                        onClick={()=>this.editColor(color)}
+                      />
                    </td>
                 </tr>);
 
@@ -180,10 +214,38 @@ handleCategoryChange= (selectedOption) => {
 
        }
   }
-  saveColor(x){
-       this.state.ProductColor.push(x);
-       this.setState(this.state);
+  cncl(){
+    this.showAddStyle();
   }
+  editProductColor(color,index){
+     this.state.ProductColor[index]=color; 
+      var dtt=[];
+    for(var i=0;i<color.details.length;i++){
+      dtt.push({
+        size:{"sizeId":color.details[i].size.id},
+        shelfLocation:{"shelfId":color.details[i].shelf.id},
+        quantity:color.details[i].quantity
+      });
+    }
+     this.state.finalColor[index]={colorId:color.color.id,
+                                  details:dtt,
+                                  productImages:color.productImages}; 
+            this.setState(this.state);
+      this.showAddStyle();
+  }
+   editColor(color){
+     var xdetail=JSON.stringify(color);
+      for(var i=0;i<this.state.ProductColor.length;i++){
+        var y=JSON.stringify(this.state.ProductColor[i]);
+        if(y===xdetail){
+              this.state.editColorVal=color;
+              this.state.editIndex=i; 
+              this.showEditStyle();
+              break;
+            }
+       }
+  }
+
     render() {
       var buttonStyle={
       width:25,
@@ -229,6 +291,10 @@ handleCategoryChange= (selectedOption) => {
                 <td><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></td>
                 </tr></tbody>
                 </table><br/><br/>
+                <div style={this.state.editStyle}>
+                <ProductButton value={this.state.editIndex} editProductColor={this.editProductColor} cancelEdit={this.cncl} colorVal={this.state.editColorVal} />
+                </div>
+                <div style={this.state.addStyle}>
                 Color <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
                 <br/><br/>
                  <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
@@ -237,6 +303,7 @@ handleCategoryChange= (selectedOption) => {
                               <td >Details</td>
                                <td >Action</td>
                               </tr>{this.showColor()}</tbody></table>
+                </div>
                </div>
              
               <input className="btn" type="submit" value="SAVE PRODUCT" onClick={this.handleSaveProduct} />
