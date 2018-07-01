@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import AddProductColor from '../components/AddProductColor'
+import AddProductColor from '../components/AddProductColor';
+import ImageCarousel from '../components/ImageCarousel/ImageCarousel';
 import {bindActionCreators} from 'redux';
 import {OnLoad,OnLoadMaster} from '../action';
 import Select from 'react-select';
@@ -8,6 +9,8 @@ import 'react-select/dist/react-select.css';
 import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE} from '../ApiConstants';
 import axios from 'axios';
 import ProductButton from '../components/ProductButton'
+import {Master} from '../data/Master';
+import {CategoryTree} from '../data/CategoryTree'
 
 
 class ProductPage extends Component {
@@ -20,9 +23,9 @@ class ProductPage extends Component {
         else{
                if(category.levelId!='1'){
                   this.state.categoryList.push({
-                  label:category.categoryName,
-                  value:category.categoryId,
-                  id:category.categoryId,
+                  label:category.subcategory[i].categoryName,
+                  value:category.subcategory[i].categoryId,
+                  id:category.subcategory[i].categoryId,
                 });
               }
         }
@@ -58,7 +61,7 @@ componentDidUpdate(prevProps,prevstates){
  constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = {  caraouselImg:[],
                     titleValue: '',
                     descriptionValue: '',
                     keywordValue: '',
@@ -73,6 +76,8 @@ componentDidUpdate(prevProps,prevstates){
                     addStyle:{
                       display:'block'
                     },
+                    filtercolor:null,
+                    colorFilters:[],
                     editIndex:0,
                     editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
                     finalColor:[],
@@ -150,7 +155,8 @@ handleCategoryChange= (selectedOption) => {
     this.state.ProductColor.push({color:x.color,
                                   details:x.details,
                                   productImages:x.productImages});
-    var dtt=[];
+    this.state.colorFilters.push(x.color);
+    var dtt=[],img=[];
     for(var i=0;i<x.details.length;i++){
       dtt.push({
         size:{"sizeId":x.details[i].size.id},
@@ -158,9 +164,14 @@ handleCategoryChange= (selectedOption) => {
         quantity:x.details[i].quantity
       });
     }
+    for(var j=0;j<x.productImages.length;j++){
+        img.push(x.productImages[j].name);
+        this.state.caraouselImg.push(x.productImages[j].file);
+      }
     this.state.finalColor.push({colorId:x.color.id,
                                   details:dtt,
-                                  productImages:x.productImages});
+                                  productImages:img});
+    
     this.setState(this.state);
     this.state.colorstyle={
       display:'none'
@@ -176,8 +187,10 @@ handleCategoryChange= (selectedOption) => {
      });
   }
   showColor(){
+     // var filter=JSON.stringify(this);
       if(this.state.ProductColor.length>=1){
         return  this.state.ProductColor.map((color)=>{
+           
         return (<tr>
                     <td>
                       {color.color.label}
@@ -214,7 +227,7 @@ handleCategoryChange= (selectedOption) => {
 
        }
   }
-  cncl(){
+     cncl(){
     this.showAddStyle();
   }
   editProductColor(color,index){
@@ -252,15 +265,22 @@ handleCategoryChange= (selectedOption) => {
       height:25
     };
     if(this.props.MasterDataReducer==null){
-      axios.get(GET_MASTER_DATA).then(res =>{
+        this.props.OnLoadMaster(this.props.Category,this.props.Track,Master);
+ /*     axios.get(GET_MASTER_DATA).then(res =>{
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          }).catch(function (error) {
     console.log(error);
-  });
+  });*/
 
     }
      if(this.props.Category==null){
-      axios.get(GET_CATEGORY_TREE).then(res =>{
+          var x= {   name:'main',
+                        levelId:'1',
+                        subcategory:CategoryTree 
+                    };
+           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
+         console.log(x);
+   /*   axios.get(GET_CATEGORY_TREE).then(res =>{
             var x= {   name:'main',
                         levelId:'1',
                         subcategory:res.data 
@@ -268,34 +288,42 @@ handleCategoryChange= (selectedOption) => {
            this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
          }).catch(function (error) {
         console.log(error);
-         });
+         
+         });*/
     }
          
         return (
             <center>
               <div style={{margin:10}}>
                 <table><tbody>
-                <tr>
-                <td>Product Name </td>
-                <td><input className="form-control" type="text" value={this.state.titleValue} onChange={this.handleTitleChange} /></td>
-                <td>Category</td>
-                <td>
-                 <Select value={this.state.categoryValue} multi={true} clearable={false} onChange={this.handleCategoryChange} 
-                 options={this.state.categoryList} />
-                </td>
-                </tr>
-                <tr>
-                <td>Description </td>
-                <td><input className="form-control" type="text" value={this.state.descriptionValue} onChange={this.handleDescriptionChange} /></td>
-                <td>Keywords</td>
-                <td><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></td>
-                </tr></tbody>
+                    <tr>
+                    <td style={{width:'500px'}}>
+                       <ImageCarousel selectedImages={this.state.caraouselImg}/>
+                    </td>
+                    <td>
+                    <table>
+                        <tr>Product Name </tr>
+                        <tr><input className="form-control" type="text" value={this.state.titleValue} onChange={this.handleTitleChange} /></tr>
+                        <td>Category</td>
+                        <tr>
+                         <Select value={this.state.categoryValue} multi={true} clearable={false} onChange={this.handleCategoryChange} 
+                         options={this.state.categoryList} />
+                        </tr>
+                        <tr>Description </tr>
+                        <tr><input className="form-control" type="text" value={this.state.descriptionValue} onChange={this.handleDescriptionChange} /></tr>
+                        <tr>Keywords</tr>
+                        <tr><input className="form-control" type="text" value={this.state.keywordValue} onChange={this.handleKeywordChange} /></tr>
+                    </table>
+                    </td>
+                    </tr></tbody>
                 </table><br/><br/>
                 <div style={this.state.editStyle}>
                 <ProductButton value={this.state.editIndex} editProductColor={this.editProductColor} cancelEdit={this.cncl} colorVal={this.state.editColorVal} />
                 </div>
                 <div style={this.state.addStyle}>
                 Color <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
+                <Select multi={true} style={{width:'120px',height:'35px', marginLeft: '25px'}} value={this.state.filtercolor} clearable={false} onChange={this.handlefilterChange} 
+                      options={this.state.colorFilters} />
                 <br/><br/>
                  <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
                 <table className="table table-bordered" style={{width:'50%'}}><tbody><tr>
@@ -307,6 +335,7 @@ handleCategoryChange= (selectedOption) => {
                </div>
              
               <input className="btn" type="submit" value="SAVE PRODUCT" onClick={this.handleSaveProduct} />
+            
            </center>
 
         );

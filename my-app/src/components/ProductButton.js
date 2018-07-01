@@ -12,7 +12,7 @@ class ProductButton extends Component {
     constructor(props) {
     super(props);
       this.state ={ shelf:[],
-                    upImg:0,
+                   // upImg:0,
                     color:[],
                     shelfValue:null,
                     colorValue:this.props.colorVal.color,
@@ -81,8 +81,8 @@ componentWillMount(){
      this.state.qty='',
      this.state.sizeValue=null,
      this.state.details=[],
-     this.state.images=[],
-     this.state.upImg=this.state.upImg+1;
+     this.state.images=[]
+     //this.state.upImg=this.state.upImg+1;
   }
   cancelEdit(){
     this.props.cancelEdit();
@@ -171,7 +171,7 @@ makeDetails(){
 
        }
   }
-  setOptions(val){
+/*  setOptions(val){
     if(val=="shelf")
      return this.state.shelf.map((value)=>{
         return <option key={value} value={value}>{value}</option>
@@ -180,7 +180,7 @@ makeDetails(){
         return this.state.color.map((value)=>{
         return <option key={value} value={value}>{value}</option>
       });
-    }
+    }*/
   setImages(x){
       this.state.images.push(x);
       alert(x+"added");
@@ -197,7 +197,7 @@ makeDetails(){
                       options={this.state.color} />
         </div>
         <div style={{float:'left'}} >
-              <UploadImage setImg={this.setImages} img={this.state.upImg} />
+              <UploadImage setImg={this.setImages} img={this.state.upImg} preImg={this.state.images} />
                </div>
                <div style={{ height: '25px' }}></div>
                <div>
