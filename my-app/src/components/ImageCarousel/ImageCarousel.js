@@ -15,9 +15,6 @@ class ImageCarousel extends Component {
    this.state = {selectedFile: null};
   }
 getCarousel(){
-    debugger;
-  console.log("kamal");
-  console.log(this.props);
     if(this.props.selectedImages.length>=1){
         debugger;
         return this.props.selectedImages.map((file)=>{
@@ -42,8 +39,8 @@ getCarousel(){
             <div>
             /*<div>{this.getCarousel()}</div>*/
             <Slider {...settings} >
-                {this.getCarousel()}
-              /*<div><img src='http://placekitten.com/g/400/200' /></div>
+               /* {this.getCarousel()}
+              <div><img src='http://placekitten.com/g/400/200' /></div>
 				<div><img src='http://placekitten.com/g/400/200' /></div>
 				<div><img src='http://placekitten.com/g/400/200' /></div>
                 <div><img src='http://placekitten.com/g/400/200' /></div>

@@ -6,12 +6,14 @@ import {GET_PRODUCT_LIST,GET_CATEGORY_TREE} from '../ApiConstants';
 import axios from 'axios';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import {Link} from "react-router-dom";
 
 class ProductList extends Component {
 
     constructor(props) {
       super(props);
       this.state = {listProduct: null,categoryList:[],categoryValue:null};
+        this.editProductDetails = this.editProductDetails.bind(this);
     }
 
  listCategory(category){
@@ -52,8 +54,14 @@ componentDidUpdate(prevProps,prevstates){
   }
     getProductColor(product){
      return product.colors.map((color)=>{
-                       return <div style={{display:'inline-block'}}>{color.colorId}</div>
-                     });
+       return <div style={{display:'inline-block'}}>{color.colorId}</div>
+     });
+    }
+    editProductDetails(product) {
+        console.log(this.props);
+        this.props.history.push({
+          pathname: '/admin/product/' + product.productId
+        })
     }
     getProductCategory(product){
       return product.categoryIds.map((category)=>{
@@ -70,6 +78,9 @@ componentDidUpdate(prevProps,prevstates){
                           <td>{product.description}</td>
                           <td>{this.getProductCategory(product)}</td>
                           <td>{this.getProductColor(product)}</td>
+                          <td>
+                            <Link to={`/admin/product/${product.productId}`}>Edit</Link>
+                          </td>
                         </tr>
                      );
                
@@ -141,6 +152,7 @@ componentDidUpdate(prevProps,prevstates){
             <td>Description</td>
             <td>Category</td>
             <td>Color</td>
+            <td>Action</td>
             </tr>
             {this.showList()}
             </tbody>

@@ -11,6 +11,7 @@ const baseUrl = 'http://arunacreations.ap-southeast-1.elasticbeanstalk.com/rest/
 //const baseUrl = 'http://acinventory-204612.appspot.com/rest/';
 
 export const GET_PRODUCT_LIST = baseUrl + "getProducts/";
+export const GET_PRODUCT_DETAILS = baseUrl + "getProduct/";
 export const GET_MASTER_DATA = baseUrl + "getMasterData";
 export const SAVE_MASTER_DATA = baseUrl + "saveMasterData";
 export const GET_CATEGORY_TREE = baseUrl + "getCategoryTree";

@@ -32,6 +32,7 @@ class ProductButton extends Component {
     this.handleUpdate = this.handleUpdate.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.removeDetail=this.removeDetail.bind(this);
+    this.editDetail=this.editDetail.bind(this);
    
   }
  componentDidUpdate(prevProps,prevstates){
@@ -119,7 +120,8 @@ componentWillMount(){
     var x={
         size:this.state.sizeValue,
         shelf:this.state.shelfValue,
-        quantity:this.state.qty
+        quantity:this.state.qty,
+        index: this.state.details.length
     }
       this.state.details.push(x);
       this.state.shelfValue=null;
@@ -171,6 +173,10 @@ makeDetails(){
 
        }
   }
+editDetail(detail) {
+    let ind = detail.index;
+    this.state.details[ind] = detail;
+}
 /*  setOptions(val){
     if(val=="shelf")
      return this.state.shelf.map((value)=>{

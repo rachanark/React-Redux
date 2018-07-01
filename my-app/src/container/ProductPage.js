@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {OnLoad,OnLoadMaster} from '../action';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE} from '../ApiConstants';
+import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE, GET_PRODUCT_DETAILS} from '../ApiConstants';
 import axios from 'axios';
 import ProductButton from '../components/ProductButton'
 import {Master} from '../data/Master';
@@ -42,6 +42,74 @@ class ProductPage extends Component {
   }
   this.setState(this.state);
  }
+    componentDidMount() {
+        axios.get(GET_PRODUCT_DETAILS + this.props.match.params.id).then(res =>{
+           res = res.data;
+            let colors = [];
+            for (let i = 0; i < res.colors.length; i++) {
+                let color = {
+                    color: {label: ''},
+                    productColorId: res.colors[i].productColorId,
+                    colorId: res.colors[i].colorId,
+                    details: []
+                }
+                let imags = [];
+                for (let j = 0; j < res.colors[i].productImages.length; j++) {
+                    imags.push({
+                        productImageId: res.colors[i].productImages[j].productImageId,
+                        productImagePath: res.colors[i].productImages[j].productImagePath
+                    });
+                }
+                for (let j = 0; j < res.colors[i].details.length; j++) {
+                    color.details.push({
+                        productDetailsId: res.colors[i].details[j].productDetailsId,
+                        size: {
+                            sizeId: res.colors[i].details[j].productDetailsId.size.sizeId,
+                            label: ''
+                        },
+                        Shelf: {
+                            shelfId: res.colors[i].details[j].productDetailsId.shelfLocation.shelfId,
+                            label: ''
+                        },
+                        quantity: res.colors[i].details[j].quantity
+                    });
+                }
+                color.productImages = imags;
+
+                colors.push(color);
+            }
+
+
+            this.state = {
+                id: res.productId,
+                caraouselImg:[],
+                titleValue: res.title,
+                descriptionValue: res.description,
+                keywordValue: res.keywords,
+                categoryValue:null,
+                selectedCat:res.categoryIds,
+                colorstyle: {
+                    display:'none'
+                },
+                editStyle: {
+                    display:'none'
+                },
+                addStyle: {
+                    display:'block'
+                },
+                filters:[],
+                filtercolor:null,
+                colorFilters:[],
+                editIndex:0,
+                editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
+                finalColor:[],
+                ProductColor:colors,
+                categoryList:[]
+            };
+         }).catch(function (error) {
+        console.log(error);
+         });
+    }
 
 componentDidUpdate(prevProps,prevstates){
   if(this.props!=prevProps)
@@ -61,29 +129,32 @@ componentDidUpdate(prevProps,prevstates){
  constructor(props) {
     super(props);
 
-    this.state = {  caraouselImg:[],
-                    titleValue: '',
-                    descriptionValue: '',
-                    keywordValue: '',
-                    categoryValue:null,
-                    selectedCat:[],
-                    colorstyle:{
-                                  display:'none'
-                                },
-                    editStyle:{
-                      display:'none'
-                    },
-                    addStyle:{
-                      display:'block'
-                    },
-                    filters:[],
-                    filtercolor:null,
-                    colorFilters:[],
-                    editIndex:0,
-                    editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
-                    finalColor:[],
-                    ProductColor:[],
-                    categoryList:[]};
+    this.state = {
+        id: '',
+        caraouselImg:[],
+        titleValue: '',
+        descriptionValue: '',
+        keywordValue: '',
+        categoryValue:null,
+        selectedCat:[],
+        colorstyle: {
+            display:'none'
+        },
+        editStyle: {
+            display:'none'
+        },
+        addStyle: {
+            display:'block'
+        },
+        filters:[],
+        filtercolor:null,
+        colorFilters:[],
+        editIndex:0,
+        editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
+        finalColor:[],
+        ProductColor:[],
+        categoryList:[]
+    };
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
@@ -96,9 +167,9 @@ componentDidUpdate(prevProps,prevstates){
   }
 
   showEditStyle(){
-    this.state.editStyle={display:'block'};
-    this.state.addStyle={display:'none'};
-    this.setState(this.state);
+        this.state.editStyle={display:'block'};
+        this.state.addStyle={display:'none'};
+      this.setState(this.state);
   }
    showAddStyle(){
     this.state.editStyle={display:'none'};
@@ -111,6 +182,7 @@ componentDidUpdate(prevProps,prevstates){
     },finalColor:[],ProductColor:[]};
   }
 handleCategoryChange= (selectedOption) => {
+    debugger;
     this.state.categoryValue= selectedOption;
     this.setState(this.state);
   }
@@ -261,10 +333,18 @@ handleCategoryChange= (selectedOption) => {
        }
   }
 
+
+
   handlefilterChange= (selectedOption) => {
-    this.state.filtercolor= selectedOption;
-    for(var z=0;z<selectedOption.length;z++)
-    this.state.filters.push(selectedOption[z].label)
+      this.state.filters = [];
+      if (selectedOption.length === 0) {
+          this.state.filtercolor = undefined;
+      } else {
+        this.state.filtercolor= selectedOption;
+      }
+    for(var z=0;z<selectedOption.length;z++) {
+        this.state.filters.push(selectedOption[z].label)
+    }
     this.setState(this.state);
   }
 
@@ -307,7 +387,7 @@ handleCategoryChange= (selectedOption) => {
                 <table><tbody>
                     <tr>
                     <td style={{width:'500px'}}>
-                       <ImageCarousel selectedImages={this.state.caraouselImg}/>
+
                     </td>
                     <td>
                     <table>
@@ -331,8 +411,10 @@ handleCategoryChange= (selectedOption) => {
                 </div>
                 <div style={this.state.addStyle}>
                 Color <input className="btn" type="submit" value="+" onClick={this.handleClick}/>
+            <div style={{width:'250px', marginTop: '15px'}}>
                 <Select multi={true} style={{width:'120px',height:'35px', marginLeft: '25px'}} value={this.state.filtercolor} clearable={false} onChange={this.handlefilterChange} 
                       options={this.state.colorFilters} />
+            </div>
                 <br/><br/>
                  <div style={this.state.colorstyle}><AddProductColor fun={this.handleColor}/></div>
                 <table className="table table-bordered" style={{width:'50%'}}><tbody><tr>

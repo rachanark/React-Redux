@@ -28,21 +28,21 @@ class ShelfButton extends Component {
       }
    }
 editShelf(newvalue,shelf){
-             var x={
-              id:shelf.shelfId,
-              name:newvalue
-            }
-            axios.post(EDIT_SHELF,x).then(res =>{
-                axios.get(GET_MASTER_DATA).then(res =>{
-                           this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
-                     }).catch(function (error) {
-                          console.log(error);
-                      });
+     var x={
+      id:shelf.shelfId,
+      name:newvalue
+    }
+    axios.post(EDIT_SHELF,x).then(res =>{
+        axios.get(GET_MASTER_DATA).then(res =>{
+                   this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
+             }).catch(function (error) {
+                  console.log(error);
+              });
 
-                }).catch(function (error) {
-                  alert("Unable to edit");
-                    console.log(error);
-                  });
+        }).catch(function (error) {
+          alert("Unable to edit");
+            console.log(error);
+          });
 }
   handleCancel(){
      this.state.style.styleEdit={display:'none'};
