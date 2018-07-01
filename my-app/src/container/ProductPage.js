@@ -263,7 +263,8 @@ handleCategoryChange= (selectedOption) => {
 
   handlefilterChange= (selectedOption) => {
     this.state.filtercolor= selectedOption;
-    this.state.filters.push(selectedOption.label)
+    for(var z=0;z<selectedOption.length;z++)
+    this.state.filters.push(selectedOption[z].label)
     this.setState(this.state);
   }
 
