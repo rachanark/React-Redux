@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Redirect } from 'react-router'
 import {connect} from 'react-redux';
 import AddProductColor from '../components/AddProductColor';
 import ImageCarousel from '../components/ImageCarousel/ImageCarousel';
@@ -6,12 +7,12 @@ import {bindActionCreators} from 'redux';
 import {OnLoad,OnLoadMaster} from '../action';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE, GET_PRODUCT_DETAILS} from '../ApiConstants';
+import {GET_MASTER_DATA,SAVE_PRODUCT,GET_CATEGORY_TREE, GET_PRODUCT_DETAILS,UPDATE_PRODUCT} from '../ApiConstants';
 import axios from 'axios';
 import ProductButton from '../components/ProductButton'
 import {Master} from '../data/Master';
 import {CategoryTree} from '../data/CategoryTree'
-
+import {getColor,getShelf,getSize} from '../Utils/MasterValue'
 
 class ProductPage extends Component {
  listCategory(category){
@@ -42,17 +43,21 @@ class ProductPage extends Component {
   }
   this.setState(this.state);
  }
-    componentDidMount() {
+   componentDidMount() {
+        if(this.props.location.pathname.includes("/admin/editProduct") && this.props.MasterDataReducer!=null)
         axios.get(GET_PRODUCT_DETAILS + this.props.match.params.id).then(res =>{
            res = res.data;
-            let colors = [];
+            let colors = [];let filters=[];
             for (let i = 0; i < res.colors.length; i++) {
+                var colorObj=res.colors[i];
+                var colorName=getColor(colorObj.colorId,this.props.MasterDataReducer);
                 let color = {
-                    color: {label: ''},
+                    color: {label:colorName ,id:colorObj.colorId,value:colorName},
                     productColorId: res.colors[i].productColorId,
                     colorId: res.colors[i].colorId,
                     details: []
                 }
+                 filters.push(color.color);
                 let imags = [];
                 for (let j = 0; j < res.colors[i].productImages.length; j++) {
                     imags.push({
@@ -64,12 +69,14 @@ class ProductPage extends Component {
                     color.details.push({
                         productDetailsId: res.colors[i].details[j].productDetailsId,
                         size: {
-                            sizeId: res.colors[i].details[j].productDetailsId.size.sizeId,
-                            label: ''
+                            label: res.colors[i].details[j].size.size,
+                            value: res.colors[i].details[j].size.size,
+                            id:res.colors[i].details[j].size.sizeId
                         },
-                        Shelf: {
-                            shelfId: res.colors[i].details[j].productDetailsId.shelfLocation.shelfId,
-                            label: ''
+                        shelf: {
+                            label: res.colors[i].details[j].shelfLocation.shelfLocation,
+                            value: res.colors[i].details[j].shelfLocation.shelfLocation,
+                            id:res.colors[i].details[j].shelfLocation.shelfId
                         },
                         quantity: res.colors[i].details[j].quantity
                     });
@@ -78,16 +85,23 @@ class ProductPage extends Component {
 
                 colors.push(color);
             }
-
-
-            this.state = {
+            let catVal=[];
+            for(let i=0;i<res.categoryIds.length;i++){
+              catVal.push({
+                label:res.categoryIds.name,
+                value:res.categoryIds.id,
+                id:res.categoryIds.id
+              });
+             }
+             // this.state.ProductColor=colors;
+                this.state = {
                 id: res.productId,
                 caraouselImg:[],
                 titleValue: res.title,
                 descriptionValue: res.description,
                 keywordValue: res.keywords,
-                categoryValue:null,
-                selectedCat:res.categoryIds,
+                categoryValue:catVal,
+                selectedCat:[],
                 colorstyle: {
                     display:'none'
                 },
@@ -98,14 +112,16 @@ class ProductPage extends Component {
                     display:'block'
                 },
                 filters:[],
+                 editFlag:true,
                 filtercolor:null,
-                colorFilters:[],
+                colorFilters:filters,
                 editIndex:0,
                 editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
-                finalColor:[],
+                //finalColor:[],
                 ProductColor:colors,
-                categoryList:[]
+                categoryList:this.state.categoryList
             };
+            this.setState(this.state);
          }).catch(function (error) {
         console.log(error);
          });
@@ -126,8 +142,8 @@ componentDidUpdate(prevProps,prevstates){
         this.setState(this.state);
          }
   }
- constructor(props) {
-    super(props);
+ constructor(props,context) {
+    super(props,context);
 
     this.state = {
         id: '',
@@ -146,12 +162,13 @@ componentDidUpdate(prevProps,prevstates){
         addStyle: {
             display:'block'
         },
+        editFlag:false,
         filters:[],
         filtercolor:null,
         colorFilters:[],
         editIndex:0,
         editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
-        finalColor:[],
+      //  finalColor:[],
         ProductColor:[],
         categoryList:[]
     };
@@ -177,9 +194,32 @@ componentDidUpdate(prevProps,prevstates){
     this.setState(this.state);
   }
   getInitState(){
-    return {titleValue: '',descriptionValue: '',keywordValue: '',categoryValue:null,colorstyle:{
-      display:'none'
-    },finalColor:[],ProductColor:[]};
+    return { id: '',
+        caraouselImg:[],
+        titleValue: '',
+        descriptionValue: '',
+        keywordValue: '',
+        categoryValue:null,
+        selectedCat:[],
+        colorstyle: {
+            display:'none'
+        },
+        editStyle: {
+            display:'none'
+        },
+        addStyle: {
+            display:'block'
+        },
+        editFlag:false,
+        filters:[],
+        filtercolor:null,
+        colorFilters:[],
+        editIndex:0,
+        editColorVal:{color:{value:'',label:'',id:''},details:[],productImages:[]},
+       // finalColor:[],
+        ProductColor:[],
+        categoryList:[]
+      };
   }
 handleCategoryChange= (selectedOption) => {
     debugger;
@@ -192,17 +232,78 @@ handleCategoryChange= (selectedOption) => {
     for(var i=0;i<temp.length;i++){
       this.state.selectedCat.push(temp[i].id);
     }
+    let finalColor=[]
+    if(this.state.editFlag){
+      var productColor=this.state.ProductColor;
+      for(var i=0;i<productColor.length;i++){
+            let dtt=[]
+            for(var j=0;j<productColor[i].details.length;j++){
+                dtt.push({
+                  productDetailsId:productColor[i].details[j].productDetailsId,
+                  size:{
+                    sizeId:productColor[i].details[j].size.id
+                  },
+                  shelfLocation:{
+                    shelfId:productColor[i].details[j].shelf.id
+                  },
+                  quantity:productColor[i].details[j].quantity
+                })
+            }
+            finalColor.push({
+              colorId:productColor[i].colorId,
+              productColorId:productColor[i].productColorId,
+              productImages:productColor[i].productImages,
+              details:dtt
+            });
+      }
+    }
+    else{
+      var productColor=this.state.ProductColor;
+      for(var i=0;i<productColor.length;i++){
+            let dtt=[]
+            for(var j=0;j<productColor[i].details.length;j++){
+                dtt.push({
+                    size:{
+                    sizeId:productColor[i].details[j].size.id
+                  },
+                  shelfLocation:{
+                    shelfId:productColor[i].details[j].shelf.id
+                  },
+                  quantity:productColor[i].details[j].quantity
+                })
+            }
+            finalColor.push({
+              colorId:productColor[i].colorId,
+              productImages:productColor[i].productImages,
+              details:dtt
+            });
+    }
+  }
 
     var x={
         title:this.state.titleValue,
         description:this.state.descriptionValue,
         categoryIds:this.state.selectedCat,
         colors:this.state.finalColor
+         }
+    if(this.state.editFlag){
+          x.productId=this.state.id;
+         axios.post(UPDATE_PRODUCT,x).then(res =>{
+         // this.context.router.transitionTo("/admin/products");
+          <Redirect to="/admin/products" />
+         }).catch(function (error) {
+                  console.log("Unable to update Product");
+                  <Redirect to="/admin/products" />
+                 // this.context.router.transitionTo("/admin/products");
+                   console.log(error);
+                  });
     }
-    axios.post(SAVE_PRODUCT,x).then().catch(function (error) {
-                  alert("Unable to add Product")
-    console.log(error);
-  });
+     
+    else
+        axios.post(SAVE_PRODUCT,x).then().catch(function (error) {
+                      alert("Unable to add Product")
+        console.log(error);
+         });
 
     this.setState(this.getInitState());
   }
@@ -228,23 +329,27 @@ handleCategoryChange= (selectedOption) => {
   handleColor(x){
     this.state.ProductColor.push({color:x.color,
                                   details:x.details,
-                                  productImages:x.productImages});
+                                  productImages:{
+                                    productImagePath:x.productImages,
+                                    productImageId:null
+                                  }
+                                });
     this.state.colorFilters.push(x.color);
     var dtt=[],img=[];
-    for(var i=0;i<x.details.length;i++){
+    /*for(var i=0;i<x.details.length;i++){
       dtt.push({
         size:{"sizeId":x.details[i].size.id},
         shelfLocation:{"shelfId":x.details[i].shelf.id},
         quantity:x.details[i].quantity
       });
-    }
+    }*/
     for(var j=0;j<x.productImages.length;j++){
-        img.push(x.productImages[j].name);
+       // img.push(x.productImages[j].name);
         this.state.caraouselImg.push(x.productImages[j].file);
       }
-    this.state.finalColor.push({colorId:x.color.id,
+    /*this.state.finalColor.push({colorId:x.color.id,
                                   details:dtt,
-                                  productImages:img});
+                                  productImages:img});*/
     
     this.setState(this.state);
     this.state.colorstyle={
@@ -294,7 +399,7 @@ handleCategoryChange= (selectedOption) => {
         var y=JSON.stringify(this.state.ProductColor[i]);
         if(y===xdetail){
               this.state.ProductColor.splice(i,1); 
-              this.state.finalColor.splice(i,1); 
+           //   this.state.finalColor.splice(i,1); 
               this.setState(this.state);
               break;
             }
@@ -306,7 +411,7 @@ handleCategoryChange= (selectedOption) => {
   }
   editProductColor(color,index){
      this.state.ProductColor[index]=color; 
-      var dtt=[];
+     /* var dtt=[];
     for(var i=0;i<color.details.length;i++){
       dtt.push({
         size:{"sizeId":color.details[i].size.id},
@@ -317,6 +422,7 @@ handleCategoryChange= (selectedOption) => {
      this.state.finalColor[index]={colorId:color.color.id,
                                   details:dtt,
                                   productImages:color.productImages}; 
+      */
             this.setState(this.state);
       this.showAddStyle();
   }
@@ -348,28 +454,28 @@ handleCategoryChange= (selectedOption) => {
     this.setState(this.state);
   }
 
-    render() {
+  render() {
       var buttonStyle={
       width:25,
       height:25
     };
     if(this.props.MasterDataReducer==null){
-        this.props.OnLoadMaster(this.props.Category,this.props.Track,Master);
- /*     axios.get(GET_MASTER_DATA).then(res =>{
+      //  this.props.OnLoadMaster(this.props.Category,this.props.Track,Master);
+     axios.get(GET_MASTER_DATA).then(res =>{
            this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
          }).catch(function (error) {
     console.log(error);
-  });*/
+  });
 
     }
      if(this.props.Category==null){
-          var x= {   name:'main',
+          /*var x= {   name:'main',
                         levelId:'1',
                         subcategory:CategoryTree 
                     };
            this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
-         console.log(x);
-   /*   axios.get(GET_CATEGORY_TREE).then(res =>{
+         console.log(x);*/
+     axios.get(GET_CATEGORY_TREE).then(res =>{
             var x= {   name:'main',
                         levelId:'1',
                         subcategory:res.data 
@@ -378,7 +484,7 @@ handleCategoryChange= (selectedOption) => {
          }).catch(function (error) {
         console.log(error);
          
-         });*/
+         });
     }
          
         return (

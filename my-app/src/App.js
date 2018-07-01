@@ -18,7 +18,8 @@ class App extends React.Component {
                     <Route path={"/admin"} component={Root}/ >
                     <Route exact path="/" component={Landing} />
                     <Route path={"/admin/category"} component={ShowSubCategory} />
-                    <Route path={"/admin/product/:id"} component={ProductPage} />
+                    <Route path={"/admin/product"} component={ProductPage} />
+                    <Route path={"/admin/editProduct/:id"} component={ProductPage} />
                     <Route path={"/admin/shelf"} component={AddShelf} />
                     <Route path={"/admin/color"} component={AddColor} />
                     <Route path={"/admin/size"} component={AddSize} />

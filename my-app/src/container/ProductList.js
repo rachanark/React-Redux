@@ -79,7 +79,7 @@ componentDidUpdate(prevProps,prevstates){
                           <td>{this.getProductCategory(product)}</td>
                           <td>{this.getProductColor(product)}</td>
                           <td>
-                            <Link to={`/admin/product/${product.productId}`}>Edit</Link>
+                            <Link to={`/admin/editProduct/${product.productId}`}>Edit</Link>
                           </td>
                         </tr>
                      );
@@ -90,11 +90,12 @@ componentDidUpdate(prevProps,prevstates){
     }
     handleCategoryChange= (selectedOption) => {
     var x= selectedOption.id;
-    this.state.categoryValue=selectedOption.label;
+    this.state.categoryValue=selectedOption;
     this.getProductByCategory(x);
   }
 
     getProductByCategory(x){
+      if(x!=undefined)
       axios.get(GET_PRODUCT_LIST+x).then(res =>{
             this.state.listProduct=res.data;
             this.setState(this.state);
