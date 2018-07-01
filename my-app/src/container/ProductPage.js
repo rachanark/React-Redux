@@ -290,10 +290,13 @@ handleCategoryChange= (selectedOption) => {
           x.productId=this.state.id;
          axios.post(UPDATE_PRODUCT,x).then(res =>{
          // this.context.router.transitionTo("/admin/products");
-          <Redirect to="/admin/products" />
+          // <Redirect to="/admin/products" />;
+          window.location.href="/admin/products";
+         
          }).catch(function (error) {
                   console.log("Unable to update Product");
-                  <Redirect to="/admin/products" />
+                    window.location.href="/admin/products";
+                // <Redirect to="/admin/products" />
                  // this.context.router.transitionTo("/admin/products");
                    console.log(error);
                   });
