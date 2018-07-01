@@ -76,6 +76,7 @@ componentDidUpdate(prevProps,prevstates){
                     addStyle:{
                       display:'block'
                     },
+                    filters:[],
                     filtercolor:null,
                     colorFilters:[],
                     editIndex:0,
@@ -90,6 +91,7 @@ componentDidUpdate(prevProps,prevstates){
     this.handleColor = this.handleColor.bind(this);
     this.handleSaveProduct=this.handleSaveProduct.bind(this);
     this.cncl=this.cncl.bind(this);
+    this.handlefilterChange=this.handlefilterChange.bind(this);    
     this.editProductColor=this.editProductColor.bind(this);
   }
 
@@ -190,7 +192,7 @@ handleCategoryChange= (selectedOption) => {
      // var filter=JSON.stringify(this);
       if(this.state.ProductColor.length>=1){
         return  this.state.ProductColor.map((color)=>{
-           
+           if(this.state.filters.includes(color.color.label) || this.state.filtercolor==null)
         return (<tr>
                     <td>
                       {color.color.label}
@@ -257,6 +259,12 @@ handleCategoryChange= (selectedOption) => {
               break;
             }
        }
+  }
+
+  handlefilterChange= (selectedOption) => {
+    this.state.filtercolor= selectedOption;
+    this.state.filters.push(selectedOption.label)
+    this.setState(this.state);
   }
 
     render() {
