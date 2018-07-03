@@ -65,7 +65,7 @@ componentDidUpdate(prevProps,prevstates){
     }
     getProductCategory(product){
       return product.categoryIds.map((category)=>{
-                       return <div>{category}</div>
+                       return <div>{category.nm}</div>
                      });
     }
 

@@ -44,7 +44,12 @@ class ProductPage extends Component {
   this.setState(this.state);
  }
    componentDidMount() {
-        if(this.props.location.pathname.includes("/admin/editProduct") && this.props.MasterDataReducer!=null)
+      if(this.props.MasterDataReducer==null){
+      //  this.props.OnLoadMaster(this.props.Category,this.props.Track,Master);
+     axios.get(GET_MASTER_DATA).then(res =>{
+           this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
+
+                 if(this.props.location.pathname.includes("/admin/editProduct") && this.props.MasterDataReducer!=null)
         axios.get(GET_PRODUCT_DETAILS + this.props.match.params.id).then(res =>{
            res = res.data;
             let colors = [];let filters=[];
@@ -88,9 +93,9 @@ class ProductPage extends Component {
             let catVal=[];
             for(let i=0;i<res.categoryIds.length;i++){
               catVal.push({
-                label:res.categoryIds.name,
-                value:res.categoryIds.id,
-                id:res.categoryIds.id
+                label:res.categoryIds[i].nm,
+                value:res.categoryIds[i].id,
+                id:res.categoryIds[i].id
               });
              }
              // this.state.ProductColor=colors;
@@ -125,6 +130,36 @@ class ProductPage extends Component {
          }).catch(function (error) {
         console.log(error);
          });
+
+
+
+         }).catch(function (error) {
+    console.log(error);
+  });
+
+    }
+     if(this.props.Category==null){
+          /*var x= {   name:'main',
+                        levelId:'1',
+                        subcategory:CategoryTree 
+                    };
+           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
+         console.log(x);*/
+     axios.get(GET_CATEGORY_TREE).then(res =>{
+            var x= {   name:'main',
+                        levelId:'1',
+                        subcategory:res.data 
+                    };
+           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
+         }).catch(function (error) {
+        console.log(error);
+         
+         });
+    }
+
+
+
+       
     }
 
 componentDidUpdate(prevProps,prevstates){
@@ -132,7 +167,7 @@ componentDidUpdate(prevProps,prevstates){
     this.getCategoryList();
   }
   componentWillMount(){
-    this.getCategoryList();
+       this.getCategoryList();
   }
  getCategoryList(){
       if(this.props.Category!=null){
@@ -462,33 +497,6 @@ handleCategoryChange= (selectedOption) => {
       width:25,
       height:25
     };
-    if(this.props.MasterDataReducer==null){
-      //  this.props.OnLoadMaster(this.props.Category,this.props.Track,Master);
-     axios.get(GET_MASTER_DATA).then(res =>{
-           this.props.OnLoadMaster(this.props.Category,this.props.Track,res.data);
-         }).catch(function (error) {
-    console.log(error);
-  });
-
-    }
-     if(this.props.Category==null){
-          /*var x= {   name:'main',
-                        levelId:'1',
-                        subcategory:CategoryTree 
-                    };
-           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
-         console.log(x);*/
-     axios.get(GET_CATEGORY_TREE).then(res =>{
-            var x= {   name:'main',
-                        levelId:'1',
-                        subcategory:res.data 
-                    };
-           this.props.OnLoad(x,['1'],this.props.MasterDataReducer);
-         }).catch(function (error) {
-        console.log(error);
-         
-         });
-    }
          
         return (
             <center>
@@ -556,3 +564,4 @@ function matchDispatchToProps(dispatch){
     return bindActionCreators({OnLoad:OnLoad,OnLoadMaster:OnLoadMaster}, dispatch);
 }
 export default connect(mapStateToProps, matchDispatchToProps)(ProductPage);
+ 
