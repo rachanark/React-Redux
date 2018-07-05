@@ -285,7 +285,9 @@ handleCategoryChange= (selectedOption) => {
                 })
             }
             finalColor.push({
-              colorId:productColor[i].colorId,
+              colorId:productColor[i].color.id,
+              description:"",
+              keywords:"",
               productColorId:productColor[i].productColorId,
               productImages:productColor[i].productImages,
               details:dtt
@@ -308,7 +310,7 @@ handleCategoryChange= (selectedOption) => {
                 })
             }
             finalColor.push({
-              colorId:productColor[i].colorId,
+              colorId:productColor[i].color.id,
               productImages:productColor[i].productImages,
               details:dtt
             });
@@ -319,7 +321,7 @@ handleCategoryChange= (selectedOption) => {
         title:this.state.titleValue,
         description:this.state.descriptionValue,
         categoryIds:this.state.selectedCat,
-        colors:this.state.finalColor
+        colors:finalColor
          }
     if(this.state.editFlag){
           x.productId=this.state.id;
@@ -369,7 +371,6 @@ handleCategoryChange= (selectedOption) => {
                                   details:x.details,
                                   productImages:{
                                     productImagePath:x.productImages,
-                                    productImageId:null
                                   }
                                 });
     this.state.colorFilters.push(x.color);

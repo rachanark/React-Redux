@@ -17,7 +17,7 @@ class UploadImage extends Component {
    }
    componentWillUpdate(nextProps, nextState) {
       if((this.props.img !== nextProps.img) || (JSON.stringify(this.props.preImg) !== JSON.stringify(nextProps.preImg)))
-          this.setState({image:this.props.preImg,prevImage:[],file:null,event:this.state.event});
+          this.setState({image:nextProps.preImg,prevImage:[],file:null,event:this.state.event});
       
    }
    /* componentDidUpdate(prevProps,prevState){

@@ -35,6 +35,12 @@ class ProductButton extends Component {
     this.editDetail=this.editDetail.bind(this);
    
   }
+
+shouldComponentUpdate(newProps, newState) {
+       let shouldUpdate = (this.props !== newProps.pre)||(this.state !== newState);
+       return shouldUpdate;
+   }
+
  componentDidUpdate(prevProps,prevstates){
       if(this.props!=prevProps){
           this.formOptions();
@@ -130,7 +136,7 @@ componentWillMount(){
        this.setState(this.state);
       // event.preventDefault();
   }
-  showDetails(){
+  /*showDetails(){
    return this.state.details.map((detail, index)=>{
           return (<tr key={index}>
           <td>{detail.size.label}</td>
@@ -142,8 +148,40 @@ componentWillMount(){
           </td>
           </tr>);
     });
+  }*/
+
+     updateShelfChange(index,selectedOption){
+   this.state.details[index].shelf=selectedOption;
+    this.setState(this.state);
+   }
+    updateQtyChange(index,event) {
+    this.state.details[index].quantity= event.target.value;
+    this.setState(this.state);
   }
-makeDetails(){
+    updateSizeChange(index,selectedOption){
+    this.state.details[index].size=selectedOption;
+    this.setState(this.state);
+  }
+
+
+ showDetails(){
+   return this.state.details.map((detail, index)=>{
+           return (<tr key={index}>
+           <td><Select style={{width:120}} value={this.state.details[index].size} clearable={false} 
+                   onChange={this.updateSizeChange.bind(this,index)} options={this.state.sizes} /></td>
+           <td><Select style={{width:120}} value={this.state.details[index].shelf} clearable={false} 
+                   onChange={this.updateShelfChange.bind(this,index)} options={this.state.shelf} /></td>
+           <td><input className="form-control" type="number" value={this.state.details[index].quantity} onChange= {this.updateQtyChange.bind(this,index)} /></td>                          
+          <td>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
+                      style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
+          </td>
+          </tr>);
+    });
+  }
+
+
+/*makeDetails(){
   if(this.state.details.length>=1)
   return (
    <table className="table table-bordered">
@@ -159,7 +197,7 @@ makeDetails(){
     </table>);
     else
       return "";
-}
+}*/
 
   removeDetail(detail){
       var xdetail=JSON.stringify(detail);
@@ -188,8 +226,7 @@ editDetail(detail) {
       });
     }*/
   setImages(x){
-      this.state.images.push(x);
-      alert(x+"added");
+      //this.state.images.push(x);
       this.setState(this.state); 
   }
   render() {
@@ -218,7 +255,7 @@ editDetail(detail) {
                       {this.showDetails()
                       }
                         <tr>
-        <td><Select style={{width:120}} value={this.state.sizeValue} clearable={false} 
+                   <td><Select style={{width:120}} value={this.state.sizeValue} clearable={false} 
                    onChange={this.handleSizeChange} options={this.state.sizes} /></td>
                    <td><Select style={{width:120}} value={this.state.shelfValue} clearable={false} 
                    onChange={this.handleShelfChange} options={this.state.shelf} /></td>

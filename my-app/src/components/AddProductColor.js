@@ -29,9 +29,9 @@ class AddProductColor extends Component {
     this.handleSizeChange = this.handleSizeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     //this.handleEdit=this.handlEdit.bind(this);
-    this.updateShelfChange = this.updateShelfChange.bind(this,this.index);
-    this.updateQtyChange = this.updateQtyChange.bind(this,this.index);
-    this.updateSizeChange = this.updateSizeChange.bind(this,this.index);
+ //   this.updateShelfChange = this.updateShelfChange.bind(this,this.index);
+ //   this.updateQtyChange = this.updateQtyChange.bind(this,this.index);
+ //   this.updateSizeChange = this.updateSizeChange.bind(this,this.index);
   
     this.setImages = this.setImages.bind(this);
      this.removeImg = this.removeImg.bind(this);
@@ -109,17 +109,17 @@ componentWillMount(){
     this.state.sizeValue=selectedOption;
     this.setState(this.state);
   }
-      updateShelfChange = (selectedOption,index) => {
-  /*  this.state.shelfValue=selectedOption;
-    this.setState(this.state);*/
+      updateShelfChange(index,selectedOption){
+   this.state.details[index].shelf=selectedOption;
+    this.setState(this.state);
    }
-    updateQtyChange(event,index) {
-    /*this.state.qty= event.target.value;
-    this.setState(this.state);*/
+    updateQtyChange(index,event) {
+    this.state.details[index].quantity= event.target.value;
+    this.setState(this.state);
   }
-    updateSizeChange=(selectedOption,index) => {
-  //  this.state.details[index].size=selectedOption;
-    //this.setState(this.state);
+    updateSizeChange(index,selectedOption){
+    this.state.details[index].size=selectedOption;
+    this.setState(this.state);
   }
 
   handleSubmit(event) {
@@ -144,10 +144,10 @@ editDetails(detail){
    return this.state.details.map((detail, index)=>{
           return (<tr key={index}>
            <td><Select style={{width:120}} value={this.state.details[index].size} clearable={false} 
-                   onChange={this.updateSizeChange(index)} options={this.state.sizes} /></td>
+                   onChange={this.updateSizeChange.bind(this,index)} options={this.state.sizes} /></td>
            <td><Select style={{width:120}} value={this.state.details[index].shelf} clearable={false} 
-                   onChange={this.updateShelfChange(index)} options={this.state.shelf} /></td>
-           <td><input className="form-control" type="number" value={this.state.details[index].quantity} onChange= {this.updateQtyChange(index)} /></td>                          
+                   onChange={this.updateShelfChange.bind(this,index)} options={this.state.shelf} /></td>
+           <td><input className="form-control" type="number" value={this.state.details[index].quantity} onChange= {this.updateQtyChange.bind(this,index)} /></td>                          
           <td>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeDetail(detail)} />
@@ -209,8 +209,8 @@ makeDetails(){
       });
     }
   setImages(x){
-       this.state.images.push(x);
-      alert(x+"added");
+     //  this.state.images.push(x);
+      //alert(x+"added");
       this.setState(this.state); 
   }
   removeImg(x){;
@@ -229,7 +229,7 @@ makeDetails(){
                       options={this.state.color} />
         </div>
         <div style={{float:'left'}} >
-              <UploadImage setImg={this.setImages} rmImg={this.removeImg} img={this.state.upImg} preImg={[]} />
+              <UploadImage setImg={this.setImages} rmImg={this.removeImg} img={this.state.upImg} preImg={this.state.images} />
                </div>
                <div style={{ height: '25px' }}></div>
                <div>
