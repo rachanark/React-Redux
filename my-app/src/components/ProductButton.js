@@ -15,12 +15,12 @@ class ProductButton extends Component {
                    // upImg:0,
                     color:[],
                     shelfValue:null,
-                    colorValue:this.props.colorVal.color,
+                    colorValue:'',
                     sizeValue:null,
                     qty:'',
                     sizes:[],
-                    details:this.props.colorVal.details,
-                    images:this.props.colorVal.productImages
+                    details:[],
+                    images:[]
     };
 
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -41,13 +41,16 @@ shouldComponentUpdate(newProps, newState) {
        return shouldUpdate;
    }
 
- componentDidUpdate(prevProps,prevstates){
-      if(this.props!=prevProps){
+ componentWillUpdate(nextProps,nextstates){
+      if(this.props!=nextProps){
+          this.state.colorValue=nextProps.colorVal.color;
+          this.state.details=nextProps.colorVal.details;
+          let productImgs=nextProps.colorVal.productImages;
+          this.state.images=[];
+          for(var i=0;i<productImgs.length;i++)
+          this.state.images.push(productImgs[i].productImagePath);
           this.formOptions();
-          this.state.colorValue=this.props.colorVal.color;
-          this.state.details=this.props.colorVal.details;
-          this.state.images=this.props.colorVal.productImages;
-          this.setState(this.state);
+         // this.setState(this.state);
       }
     
    }

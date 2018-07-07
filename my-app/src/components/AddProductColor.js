@@ -208,10 +208,8 @@ makeDetails(){
         return <option key={value} value={value}>{value}</option>
       });
     }
-  setImages(x){
-     //  this.state.images.push(x);
-      //alert(x+"added");
-      this.setState(this.state); 
+  setImages(){
+    this.setState(this.state); 
   }
   removeImg(x){;
           this.state.images.splice(x,1); 

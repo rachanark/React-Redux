@@ -12,7 +12,7 @@ class UploadImage extends Component {
   }
 
  shouldComponentUpdate(newProps, newState) {
-       let shouldUpdate = (this.props.preImg !== newProps.preImg)||(this.props.img !== newProps.img) || (JSON.stringify(this.state.image) !== JSON.stringify(this.state.prevImage));
+       let shouldUpdate =(this.state!==newState) ||  (this.props.preImg !== newProps.preImg)||(this.props.img !== newProps.img) || (JSON.stringify(this.state.image) !== JSON.stringify(this.state.prevImage));
        return shouldUpdate;
    }
    componentWillUpdate(nextProps, nextState) {
@@ -47,12 +47,17 @@ class UploadImage extends Component {
                   }
               }
 
-              this.state.prevImage=JSON.stringify(this.state.image);
-                      this.state.image.push({name:file.name,file:reader.result});
-                      this.props.setImg({name:file.name,file:reader.result});
+              axios.put(UPLOAD_IMAGE, formData,config).then(res =>{
+                      this.state.prevImage=JSON.stringify(this.state.image);
+                      this.state.image.push(res.data.success);
+                      this.props.setImg();
                       this.state.event.target.value=null;
                       this.setState(this.state);
-              
+                       }).catch(function (error) {
+                            console.log(error);
+                            alert("Error adding image");
+                          })
+
             }
             reader.readAsDataURL(file);
             
@@ -74,8 +79,8 @@ class UploadImage extends Component {
   }
   getCarousel(){
     return this.state.image.map((file)=>{
-                          return (   <div key={file.name} style={{display:'inline'}}>
-                                      <img src={file.file} style={{width:50,height:50}} />
+                          return (   <div style={{display:'inline'}}>
+                                      <img src={file} style={{width:50,height:50}} />
                                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1Azzfiyd3n-VTnU7pOn-85Q-UAeUU4d-fmK9l7_-dl4XIBS_E" 
                       style={{width:20,height:20}}  onClick={() =>this.removeImages(file)} />
                                        </div>
